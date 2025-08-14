@@ -1,0 +1,2 @@
+export const incomeCategories = ["Gaji", "Freelance", "Investasi", "Bonus", "Lainnya"]
+export const expenseCategories = ["Makanan", "Transportasi", "Belanja", "Tagihan", "Hiburan", "Kesehatan", "Lainnya"]
