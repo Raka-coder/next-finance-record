@@ -5,6 +5,8 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/utils/supabase/client"
+import { toast } from "sonner"
+import LoadingGlobal from "@/components/loading/loading-global"
 
 interface AuthLayoutProps {
   children: React.ReactNode
@@ -21,6 +23,9 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       if (session) {
         setIsAuthenticated(true)
         router.push("/dashboard")
+        toast.message("Login Berhasil!", {
+          description: "Selamat Datang Kembali!",
+        })
         return
       }
       setIsAuthenticated(false)
@@ -33,6 +38,9 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setIsAuthenticated(true)
+        toast.message("Login Berhasil!", {
+          description: "Selamat Datang!",
+        })
         router.push("/dashboard")
         return
       }
@@ -45,9 +53,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-      </div>
+      <LoadingGlobal />
     )
   }
 

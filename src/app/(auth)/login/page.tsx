@@ -38,7 +38,7 @@ export default function MasukPage() {
         message: error.message,
       })
     } else {
-      router.push("/")
+      router.push("/dashboard?success=1")
     }
   }
 
@@ -91,7 +91,7 @@ export default function MasukPage() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Memproses..." : "Masuk"}
+              {isSubmitting ? "Memproses..." : "Login"}
             </Button>
           </form>
         </Form>

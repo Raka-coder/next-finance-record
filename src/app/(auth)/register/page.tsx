@@ -154,7 +154,7 @@ export default function RegisterPage() {
               )}
             />
             <Button type="submit" className="w-full" disabled={loading || !!usernameError}>
-              {loading ? "On Progress..." : "Register"}
+              {loading ? "Memproses..." : "Register"}
             </Button>
           </form>
         </Form>
