@@ -1,39 +1,45 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { supabase } from "@/utils/supabase/client"
 import { Wallet } from "lucide-react"
+import { loginFormSchema, type LoginFormValues } from "@/validation/schemas/login"
 
 export default function MasukPage() {
-  const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [message, setMessage] = useState("")
   const router = useRouter()
 
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage("")
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
 
+  const {
+    formState: { isSubmitting },
+  } = form
+
+  const onSubmit = async (data: LoginFormValues) => {
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      email: data.email,
+      password: data.password,
     })
 
     if (error) {
-      setMessage(error.message)
+      form.setError("root", {
+        message: error.message,
+      })
     } else {
       router.push("/")
     }
-    setLoading(false)
   }
 
   return (
@@ -48,35 +54,52 @@ export default function MasukPage() {
         <CardDescription>Masukkan email dan password untuk masuk</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSignIn} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="nama@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-[260px]">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="your@email.com"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="yourpassword"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Memproses..." : "Masuk"}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Memproses..." : "Masuk"}
+            </Button>
+          </form>
+        </Form>
 
-        {message && (
-          <div className="mt-4 p-3 rounded-md text-sm bg-red-50 text-red-600 border border-red-200">{message}</div>
+        {form.formState.errors.root && (
+          <div className="mt-4 p-3 rounded-md text-sm bg-red-50 text-red-600 border border-red-200">
+            {form.formState.errors.root.message}
+          </div>
         )}
 
         <div className="mt-4 text-center text-sm">
