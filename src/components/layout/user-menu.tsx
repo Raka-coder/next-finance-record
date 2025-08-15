@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -29,6 +30,9 @@ import { supabase } from "@/utils/supabase/client"
 import { ProfileService } from "@/services/profile-service"
 import type { Profile } from "@/types/profile-types"
 import { User, Settings, LogOut, Edit, UserPlus } from "lucide-react"
+import { LogoutDialog } from "@/components/dialog/logout-dialog"
+import Link from "next/link"
+import { toast } from "sonner"
 
 interface UserMenuProps {
   profile: Profile | null
@@ -40,6 +44,7 @@ interface UserMenuProps {
 export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail }: UserMenuProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
   const [editForm, setEditForm] = useState({
     username: profile?.username || "",
     full_name: profile?.full_name || "",
@@ -51,10 +56,14 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
   const [usernameError, setUsernameError] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const router = useRouter()
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {
       alert("Error signing out: " + error.message)
+    } else {
+      router.push("/login")
     }
   }
 
@@ -98,6 +107,17 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
     e.preventDefault()
     setLoading(true)
 
+    // Cek apakah ada perubahan
+    const hasChanges = 
+      editForm.username !== profile?.username || 
+      editForm.full_name !== profile?.full_name
+
+    if (!hasChanges) {
+      toast.error("Tidak ada profil yang diubah")
+      setLoading(false)
+      return
+    }
+
     try {
       const isUsernameValid = await validateUsername(editForm.username)
       if (!isUsernameValid) {
@@ -111,9 +131,9 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       })
 
       setIsEditDialogOpen(false)
-      alert("Profil berhasil diperbarui!")
+      toast.success("Profil berhasil diperbarui!")
     } catch (error) {
-      alert("Gagal memperbarui profil")
+      toast.error("Gagal memperbarui profil")
     } finally {
       setLoading(false)
     }
@@ -290,7 +310,10 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
                   <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                     Batal
                   </Button>
-                  <Button type="submit" disabled={loading || !!usernameError}>
+                  <Button 
+                    type="submit" 
+                    disabled={loading || !!usernameError}
+                  >
                     {loading ? "Menyimpan..." : "Simpan"}
                   </Button>
                 </div>
@@ -303,15 +326,23 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
-            <span>Pengaturan</span>
+              <Link href="/dashboard/settings">            
+                <span>Pengaturan</span>
+              </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut}>
+          <DropdownMenuItem onClick={() => setIsLogoutDialogOpen(true)}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Keluar</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <LogoutDialog 
+        open={isLogoutDialogOpen} 
+        onOpenChange={setIsLogoutDialogOpen}
+        onLogoutSuccess={() => router.push("/login")}
+      />
     </div>
   )
 }
