@@ -1,7 +1,7 @@
 "use client"
 
 import { TransactionList } from "@/components/dashboard/transaction-list"
-import Loading from "@/components/loading-component"
+import Loading from "@/components/loading/loading-component"
 import { useTransactions } from "@/hooks/use-transaction"
 
 export default function DaftarTransaksiPage() {

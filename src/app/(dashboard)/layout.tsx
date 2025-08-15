@@ -19,6 +19,31 @@ import { UserMenu } from "@/components/layout/user-menu"
 import { useProfile } from "@/hooks/use-profile"
 import { supabase } from "@/utils/supabase/client"
 import type { User } from "@supabase/supabase-js"
+import LoadingGlobal from "@/components/loading/loading-global"
+
+// Import menu items for consistent naming
+const menuItems = [
+  {
+    id: "summary",
+    title: "Ringkasan Keuangan",
+    href: "/dashboard",
+  },
+  {
+    id: "add",
+    title: "Tambah Transaksi",
+    href: "/dashboard/add-transaction",
+  },
+  {
+    id: "list",
+    title: "Daftar Transaksi",
+    href: "/dashboard/transaction-lists",
+  },
+  {
+    id: "settings",
+    title: "Pengaturan",
+    href: "/dashboard/settings",
+  },
+]
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -39,7 +64,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       if (!session) {
         setIsAuthenticated(false)
         setLoading(false)
-        router.push("/register")
+        router.push("/login")
         return
       }
       setUser(session.user)
@@ -54,7 +79,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       if (!session) {
         setIsAuthenticated(false)
         setUser(null)
-        router.push("/register")
+        router.push("/login")
         return
       }
       setUser(session.user)
@@ -65,20 +90,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => subscription.unsubscribe()
   }, [router])
 
-  // Function to get page title based on pathname
+  // Function to get page title based on pathname using sidebar menu data
   const getPageTitle = () => {
-    switch (pathname) {
-      case "/dashboard":
-        return "Ringkasan Keuangan"
-      case "/dashboard/tambah-transaksi":
-        return "Tambah Transaksi"
-      case "/dashboard/daftar-transaksi":
-        return "Daftar Transaksi"
-      case "/dashboard/pengaturan":
-        return "Pengaturan"
-      default:
-        return "Dashboard"
+    // Find exact match first
+    const exactMatch = menuItems.find(item => item.href === pathname)
+    if (exactMatch) {
+      return exactMatch.title
     }
+    
+    // Check for partial match (for subpages)
+    const partialMatch = menuItems.find(item => pathname.startsWith(item.href))
+    if (partialMatch) {
+      return partialMatch.title
+    }
+    
+    // Default fallback
+    return "Dashboard"
   }
 
   // Function to generate breadcrumbs
@@ -111,9 +138,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   // Show loading spinner while checking authentication
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-      </div>
+      <LoadingGlobal />
     )
   }
 

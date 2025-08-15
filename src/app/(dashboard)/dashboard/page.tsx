@@ -1,6 +1,7 @@
 "use client"
 
 import { FinancialSummary } from "@/components/dashboard/financial-summary"
+import Loading from "@/components/loading/loading-component"
 import { useTransactions } from "@/hooks/use-transaction"
 
 export default function DashboardPage() {
@@ -8,9 +9,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
+      <Loading />
     )
   }
 

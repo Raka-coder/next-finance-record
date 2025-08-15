@@ -5,7 +5,7 @@ import { Settings } from "@/components/dashboard/setting"
 import { useProfile } from "@/hooks/use-profile"
 import { supabase } from "@/utils/supabase/client"
 import type { User } from "@supabase/supabase-js"
-import Loading from "@/components/loading-component"
+import Loading from "@/components/loading/loading-component"
 
 export default function PengaturanPage() {
   const [user, setUser] = useState<User | null>(null)
