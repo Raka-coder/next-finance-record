@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { type TransactionFormValues } from "@/validation/schemas/transaction"
+import { id } from "date-fns/locale"
 
 interface TransactionAmountDateFieldsProps {
   control: Control<TransactionFormValues>
@@ -50,7 +51,7 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {field.value
-                      ? format(new Date(field.value), "dd MMMM yyyy")
+                      ? format(new Date(field.value), "dd MMMM yyyy", {locale: id})
                       : "Pilih tanggal"}
                   </Button>
                 </FormControl>
@@ -61,7 +62,7 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                   mode="single"
                   selected={field.value ? new Date(field.value) : undefined}
                   onSelect={(date) =>
-                    field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                    field.onChange(date ? format(date, "dd-MM-yyyy", {locale: id}) : "")
                   }
                   disabled={(date) => date > new Date()}
                   initialFocus
