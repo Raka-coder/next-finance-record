@@ -2,7 +2,6 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { useFormContext } from "react-hook-form"
 import { RegisterFormValues } from "@/validation/schemas/register"
-import { ProfileService } from "@/services/profile-service"
 
 export function UsernameField() {
   const { control } = useFormContext<RegisterFormValues>()
