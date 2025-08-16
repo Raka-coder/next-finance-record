@@ -1,9 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { SettingsIcon } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import type { User } from "@supabase/supabase-js"
 import type { Profile } from "@/types/profile-types"
 import { ProfileSettingsCard } from "./settings/profile-settings-card"
@@ -19,7 +14,7 @@ interface SettingsProps {
 
 export function Settings({ user, profile = null }: SettingsProps) {
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center gap-2 mb-6">
         <SettingsIcon className="size-6" />
         <h1 className="text-2xl font-bold">Pengaturan</h1>
