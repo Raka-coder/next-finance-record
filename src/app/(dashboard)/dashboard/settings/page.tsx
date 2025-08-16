@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Settings } from "@/components/dashboard/setting"
+import { Settings } from "@/components/dashboard/settings"
 import { useProfile } from "@/hooks/use-profile"
 import { supabase } from "@/utils/supabase/client"
 import type { User } from "@supabase/supabase-js"

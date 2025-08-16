@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Rubik, Geist_Mono } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -10,10 +10,10 @@ const rubikSans = Rubik({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = generateMetadata({
   title: "Finance Record",
@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head/>
       <body
-        className={`${rubikSans.variable} ${geistMono.variable} antialiased`}
+        className={`${rubikSans.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
