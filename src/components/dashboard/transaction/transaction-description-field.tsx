@@ -3,7 +3,7 @@
 import { type Control } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { type TransactionFormValues } from "@/validation/schemas/transaction"
+import { type TransactionFormValues } from "@/validation/schemas/add-transaction"
 
 interface TransactionDescriptionFieldProps {
   control: Control<TransactionFormValues>

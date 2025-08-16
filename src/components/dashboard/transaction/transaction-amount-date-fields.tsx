@@ -9,7 +9,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
-import { type TransactionFormValues } from "@/validation/schemas/transaction"
+import { type TransactionFormValues } from "@/validation/schemas/add-transaction"
 import { id } from "date-fns/locale"
 
 interface TransactionAmountDateFieldsProps {

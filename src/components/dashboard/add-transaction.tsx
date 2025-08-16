@@ -9,7 +9,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
-import { transactionFormSchema, type TransactionFormValues } from "@/validation/schemas/transaction"
+import { transactionFormSchema, type TransactionFormValues } from "@/validation/schemas/add-transaction"
 import type { Transaction } from "@/types/transaction"
 
 import { TransactionTypeField } from "./transaction/transaction-type-field"

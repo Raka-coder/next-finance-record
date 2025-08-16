@@ -4,7 +4,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { type Control } from "react-hook-form"
-import { type TransactionFormValues } from "@/validation/schemas/transaction"
+import { type TransactionFormValues } from "@/validation/schemas/add-transaction"
 
 interface TransactionTypeFieldProps {
   control: Control<TransactionFormValues>
