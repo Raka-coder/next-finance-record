@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Wallet } from "lucide-react"
-import { LoginForm } from "./login-form"
+import { LoginForm } from "./login/login-form"
 import { useRouter } from "next/navigation"
 
 interface LoginCardProps {

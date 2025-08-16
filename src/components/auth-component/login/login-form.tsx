@@ -1,14 +1,15 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form } from "@/components/ui/form"
 import { supabase } from "@/utils/supabase/client"
-import { loginFormSchema, type LoginFormValues } from "@/validation/schemas/login"
+import { loginFormSchema, LoginFormValues } from "@/validation/schemas/login"
+import { useRouter } from "next/navigation"
+import { EmailField } from "./email-field"
+import { PasswordField } from "./password-field"
+import { SubmitButton } from "./submit-button"
+import { RegisterLink } from "./register-link"
 
 interface LoginFormProps {
   onLoginSuccess?: () => void
@@ -52,43 +53,9 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-[260px]">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    placeholder="your@email.com"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="password"
-                    placeholder="yourpassword"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Memproses..." : "Login"}
-          </Button>
+          <EmailField />
+          <PasswordField />
+          <SubmitButton loading={isSubmitting} />
         </form>
       </Form>
 
@@ -98,12 +65,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
         </div>
       )}
 
-      <div className="mt-4 text-center text-sm">
-        Belum punya akun?{" "}
-        <Link href="/register" className="text-blue-600 hover:underline">
-          Daftar di sini
-        </Link>
-      </div>
+      <RegisterLink />
     </div>
   )
 }
