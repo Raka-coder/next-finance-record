@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
 import { profileSchema, ProfileSchema } from "@/validation/schemas/profile"
-import { ProfileService } from "@/services/profile-service"
-import type { Profile } from "@/types/profile-types"
+import { ProfileService } from "@/services/profile.service"
+import type { Profile } from "@/interfaces/profile-interface"
 import { toast } from "sonner"
 
 interface ProfileEditDialogProps {
