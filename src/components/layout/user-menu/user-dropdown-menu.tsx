@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { DialogTrigger } from "@/components/ui/dialog"
 import { Settings, LogOut, Edit } from "lucide-react"
-import type { Profile } from "@/types/profile-types"
+import type { Profile } from "@/interfaces/profile-interface"
 import { ProfileEditDialog } from "./profile-edit-dialog"
 
 interface UserDropdownMenuProps {

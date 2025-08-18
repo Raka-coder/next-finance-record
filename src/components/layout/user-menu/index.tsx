@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import type { Profile } from "@/types/profile-types"
+import type { Profile } from "@/interfaces/profile-interface"
 import { UserProfileDisplay } from "./user-profile-display"
 import { UserDropdownMenu } from "./user-dropdown-menu"
 import { ProfileCreateDialog } from "./profile-create-dialog"

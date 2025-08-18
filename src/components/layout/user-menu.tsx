@@ -26,13 +26,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { supabase } from "@/utils/supabase/client"
 import { ProfileService } from "@/services/profile.service"
 import type { Profile } from "@/interfaces/profile-interface"
 import { User, Settings, LogOut, Edit, UserPlus } from "lucide-react"
 import { LogoutDialog } from "@/components/dialog/logout-dialog"
 import Link from "next/link"
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/use-auth"
 
 interface UserMenuProps {
   profile: Profile | null
@@ -57,15 +57,8 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) {
-      alert("Error signing out: " + error.message)
-    } else {
-      router.push("/login")
-    }
-  }
+  // Context Auth
+  useAuth()
 
   const validateUsername = async (username: string, isCreate = false) => {
     if (username.length < 3) {

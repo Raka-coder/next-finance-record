@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { UserMenu } from "@/components/layout/user-menu"
 import { useProfile } from "@/hooks/use-profile"
-import { supabase } from "@/utils/supabase/client"
-import type { User } from "@supabase/supabase-js"
+import { useAuth } from "@/hooks/use-auth"
 import LoadingGlobal from "@/components/loading/loading-global"
 import LoadingToLogin from "@/components/loading/loading-to-login"
 
@@ -51,45 +50,17 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const router = useRouter()
+  const { user, loading, isAuthenticated, redirectToLogin } = useAuth()
   const pathname = usePathname()
 
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        setIsAuthenticated(false)
-        setLoading(false)
-        router.push("/login")
-        return
-      }
-      setUser(session.user)
-      setIsAuthenticated(true)
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setIsAuthenticated(false)
-        setUser(null)
-        router.push("/login")
-        return
-      }
-      setUser(session.user)
-      setIsAuthenticated(true)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [router])
+    // Redirect to login if not authenticated and not already loading
+    if (!loading && !isAuthenticated) {
+      redirectToLogin()
+    }
+  }, [loading, isAuthenticated, redirectToLogin])
 
   // Function to get page title based on pathname using sidebar menu data
   const getPageTitle = () => {

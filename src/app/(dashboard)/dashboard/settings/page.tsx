@@ -1,23 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Settings } from "@/components/dashboard/settings"
 import { useProfile } from "@/hooks/use-profile"
-import { supabase } from "@/utils/supabase/client"
-import type { User } from "@supabase/supabase-js"
+import { useAuth } from "@/hooks/use-auth"
 import Loading from "@/components/loading/loading-component"
 
 export default function PengaturanPage() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const { profile, updateProfile } = useProfile(user?.id)
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user)
-      setLoading(false)
-    })
-  }, [])
 
   if (loading) {
     return (

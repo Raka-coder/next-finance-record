@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserPlus } from "lucide-react"
-import type { Profile } from "@/types/profile-types"
+import type { Profile } from "@/interfaces/profile-interface"
 import { DialogTrigger } from "@/components/ui/dialog"
 
 interface UserProfileDisplayProps {

@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { LogOut, AlertTriangle } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { LoadingButton } from "@/components/ui/loading-button"
 import {
   Dialog,
   DialogContent,
@@ -9,10 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { LoadingButton } from "@/components/ui/loading-button"
-import { supabase } from "@/utils/supabase/client"
-import { LogOut, AlertTriangle } from 'lucide-react'
+import { useAuth } from "@/hooks/use-auth"
 import { toast } from "sonner"
 
 interface LogoutDialogProps {
@@ -22,41 +21,33 @@ interface LogoutDialogProps {
 }
 
 export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const { logout, logoutLoading, logoutError, clearLogoutError } = useAuth()
 
   const handleLogout = async () => {
     try {
-      setLoading(true)
-      setError("")
-
-      const { error } = await supabase.auth.signOut()
+      clearLogoutError()
       
-      if (error) {
-        setError(error.message)
-        toast.error(error.message)
-        return
-      }
-
-      // Close dialog
-      onOpenChange(false)
-      toast.message("Logout berhasil!")
+      const result = await logout()
       
-      // Call success callback if provided
-      if (onLogoutSuccess) {
-        onLogoutSuccess()
+      if (result) {
+        // Close dialog
+        onOpenChange(false)
+        toast.message("Logout berhasil!")
+        
+        // Call success callback if provided
+        if (onLogoutSuccess) {
+          onLogoutSuccess()
+        }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat logout")
-      toast.error("Logout gagal!: " + err)
-    } finally {
-      setLoading(false)
+      // Error handling is done in the hook, just show toast
+      toast.error("Logout gagal!")
     }
   }
 
   const handleCancel = () => {
-    if (!loading) {
-      setError("")
+    if (!logoutLoading) {
+      clearLogoutError()
       onOpenChange(false)
     }
   }
@@ -74,9 +65,9 @@ export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDial
           </DialogDescription>
         </DialogHeader>
 
-        {error && (
+        {logoutError && (
           <div className="p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md">
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{logoutError}</p>
           </div>
         )}
 
@@ -85,16 +76,15 @@ export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDial
             type="button"
             variant="outline"
             onClick={handleCancel}
-            disabled={loading}
+            disabled={logoutLoading}
             className="w-auto sm:w-auto cursor-pointer"
           >
             Batal
           </Button>
           <LoadingButton
             type="button"
-            // variant="destructive"
             onClick={handleLogout}
-            loading={loading}
+            loading={logoutLoading}
             loadingText="Memproses..."
             className="w-auto sm:w-auto cursor-pointer bg-red-500 hover:bg-red-600 dark:text-white"
           >

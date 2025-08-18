@@ -2,10 +2,10 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/utils/supabase/client"
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/use-auth"
 import LoadingGlobal from "@/components/loading/loading-global"
 import LoadingToDashboard from "@/components/loading/loading-to-dashboard"
 
@@ -14,43 +14,28 @@ interface AuthLayoutProps {
 }
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
-  const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { user, loading, isAuthenticated, redirectToDashboard } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     // Check if user is already authenticated
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setIsAuthenticated(true)
-        router.push("/dashboard")
-        toast.message("Login Berhasil!", {
-          description: "Selamat Datang Kembali!",
-        })
-        return
-      }
-      setIsAuthenticated(false)
-      setLoading(false)
-    })
+    if (isAuthenticated && user) {
+      redirectToDashboard()
+      toast.message("Login Berhasil!", {
+        description: "Selamat Datang Kembali!",
+      })
+    }
+  }, [isAuthenticated, user, redirectToDashboard])
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setIsAuthenticated(true)
-        toast.message("Login Berhasil!", {
-          description: "Selamat Datang!",
-        })
-        router.push("/dashboard")
-        return
-      }
-      setIsAuthenticated(false)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [router])
+  // Listen for auth changes
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      toast.message("Login Berhasil!", {
+        description: "Selamat Datang!",
+      })
+      redirectToDashboard()
+    }
+  }, [isAuthenticated, user, redirectToDashboard])
 
   if (loading) {
     return (
