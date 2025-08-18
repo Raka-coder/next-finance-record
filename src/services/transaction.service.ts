@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase/client"
-import type { Transaction, TransactionInput } from "@/types/transaction"
+import type { Transaction, TransactionInput } from "@/interfaces/transaction-interface"
 
 export class TransactionService {
   static async getTransactions(): Promise<Transaction[]> {

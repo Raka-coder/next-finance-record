@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase/client"
-import type { Profile } from "@/types/profile-types"
+import type { Profile } from "@/interfaces/profile-interface"
 
 export class ProfileService {
   static async getProfile(userId: string): Promise<Profile | null> {
