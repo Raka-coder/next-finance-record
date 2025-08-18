@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ProfileService } from "@/services/profile-service"
-import type { Profile } from "@/types/profile-types"
+import { ProfileService } from "@/services/profile.service"
+import type { Profile } from "@/interfaces/profile-interface"
 
 export function useProfile(userId: string | undefined) {
   const [profile, setProfile] = useState<Profile | null>(null)
