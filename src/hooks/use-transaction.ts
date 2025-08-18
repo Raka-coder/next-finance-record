@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { TransactionService } from "@/types/transaction-service"
-import type { Transaction, TransactionInput } from "@/types/transaction"
+import { TransactionService } from "@/services/transaction.service"
+import type { Transaction, TransactionInput } from "@/interfaces/transaction-interface"
 
 export function useTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
