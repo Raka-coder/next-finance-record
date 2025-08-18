@@ -1,4 +1,4 @@
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 
 export function exportToCSV(transactions: Transaction[], userEmail: string): boolean {
   try {
