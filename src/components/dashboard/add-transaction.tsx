@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { transactionFormSchema, type TransactionFormValues } from "@/validation/schemas/add-transaction"
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 
 import { TransactionTypeField } from "./transaction/transaction-type-field"
 import { TransactionAmountDateFields } from "./transaction/transaction-amount-date-fields"

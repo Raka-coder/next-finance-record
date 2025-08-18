@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 import { format, parseISO, startOfDay, endOfDay, addDays } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { DeleteTransactionDialog } from "@/components/dialog/delete-transaction-dialog"

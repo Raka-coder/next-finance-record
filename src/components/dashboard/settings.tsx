@@ -1,6 +1,6 @@
 import { SettingsIcon } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
-import type { Profile } from "@/types/profile-types"
+import type { Profile } from "@/interfaces/profile-interface"
 import { ProfileSettingsCard } from "./settings/profile-settings-card"
 import { NotificationSettingsCard } from "./settings/notification-settings-card"
 import { AppearanceSettingsCard } from "./settings/appearance-settings-card"

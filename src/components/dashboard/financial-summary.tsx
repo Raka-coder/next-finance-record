@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 import { SummaryCards } from "./financial-summary/summary-cards"
 import { PieChartsSection } from "./financial-summary/pie-charts-section"
 import { CategoryBreakdown } from "./financial-summary/category-breakdown"
