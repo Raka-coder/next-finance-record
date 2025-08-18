@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { supabase } from "@/utils/supabase/client"
 import { toast } from "sonner"
 import LoadingGlobal from "@/components/loading/loading-global"
+import LoadingToDashboard from "@/components/loading/loading-to-dashboard"
 
 interface AuthLayoutProps {
   children: React.ReactNode
@@ -60,11 +61,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   // Don't render auth forms if already authenticated (will redirect)
   if (isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-gray-600">Redirecting to dashboard...</p>
-        </div>
-      </div>
+      <LoadingToDashboard />
     )
   }
 

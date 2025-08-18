@@ -20,6 +20,7 @@ import { useProfile } from "@/hooks/use-profile"
 import { supabase } from "@/utils/supabase/client"
 import type { User } from "@supabase/supabase-js"
 import LoadingGlobal from "@/components/loading/loading-global"
+import LoadingToLogin from "@/components/loading/loading-to-login"
 
 // Import menu items for consistent naming
 const menuItems = [
@@ -145,11 +146,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   // Don't render anything if not authenticated (will redirect)
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-gray-600">Redirecting to login...</p>
-        </div>
-      </div>
+      <LoadingToLogin />
     )
   }
 
