@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
-import { CalendarIcon, Download, CheckCircle, AlertCircle, Info } from "lucide-react"
+import { CalendarIcon, Download, CheckCircle, AlertCircle, Info, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
-import { ExportService } from "@/services/export/export-csv-service"
+import { ExportService } from "@/services/export/export-csv.service"
 import type { User } from "@supabase/supabase-js"
 
 interface ExportSummary {
@@ -273,7 +273,7 @@ export function DataExportSection({ user }: DataExportSectionProps) {
           >
             {exportLoading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <Loader2 className="h-4 w-4 animate-spin"/>
                 Mengekspor...
               </>
             ) : exportSuccess ? (
