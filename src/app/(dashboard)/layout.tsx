@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
@@ -20,7 +20,7 @@ import { useProfile } from "@/hooks/use-profile"
 import { useAuth } from "@/hooks/use-auth"
 import LoadingGlobal from "@/components/loading/loading-global"
 import LoadingToLogin from "@/components/loading/loading-to-login"
-
+import { toast } from "sonner"
 // Import menu items for consistent naming
 const menuItems = [
   {
@@ -54,6 +54,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
 
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
+  const toastShown = useRef(false)
 
   useEffect(() => {
     // Redirect to login if not authenticated and not already loading
@@ -61,6 +62,42 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       redirectToLogin()
     }
   }, [loading, isAuthenticated, redirectToLogin])
+
+  // Show welcome toast only once per session
+  // useEffect(() => {
+  //   if (isAuthenticated && user && !toastShown.current) {
+  //     // Cek apakah toast sudah ditampilkan dalam sesi ini
+  //     const toastDisplayed = sessionStorage.getItem("toastDisplayed")
+      
+  //     if (!toastDisplayed && !toastShown.current) {
+  //       // Tandai bahwa toast sudah ditampilkan
+  //       sessionStorage.setItem("toastDisplayed", "true")
+  //       toastShown.current = true
+        
+  //       // Tampilkan toast welcome
+  //       const hasVisitedBefore = localStorage.getItem("hasVisitedDashboard")
+  //       if (!hasVisitedBefore) {
+  //         // User belum pernah mengunjungi dashboard sebelumnya
+  //         localStorage.setItem("hasVisitedDashboard", "true")
+  //         toast.message("Login Berhasil!", {
+  //           description: "Selamat Datang!",
+  //           id: "welcome-toast"
+  //         })
+  //       } else {
+  //         // User pernah mengunjungi dashboard sebelumnya
+  //         toast.message("Login Berhasil!", {
+  //           description: "Selamat Datang Kembali!",
+  //           id: "welcome-back-toast"
+  //         })
+  //       }
+  //     }
+  //   }
+    
+  //   return () => {
+  //     // Reset toastShown saat komponen di-unmount
+  //     toastShown.current = false
+  //   }
+  // }, [isAuthenticated, user])
 
   // Function to get page title based on pathname using sidebar menu data
   const getPageTitle = () => {

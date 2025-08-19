@@ -31,6 +31,9 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   } = form
 
   const onSubmit = async (data: LoginFormValues) => {
+    // Hapus flag sebelum login untuk memastikan toast menampilkan pesan yang tepat
+    localStorage.removeItem('hasVisitedDashboard')
+
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,

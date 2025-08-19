@@ -65,6 +65,7 @@ export function useAuth() {
 
       // Clear any local storage or cache if needed
       localStorage.removeItem('user-preferences')
+      localStorage.removeItem('hasVisitedDashboard')
       
       // Redirect to login page
       redirectToLogin()
