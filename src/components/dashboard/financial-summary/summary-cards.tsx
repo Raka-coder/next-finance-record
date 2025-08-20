@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { TrendingUp, TrendingDown, Wallet, BarChart3 } from "lucide-react"
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 
 type SummaryCardsProps = {
   transactions: Transaction[]

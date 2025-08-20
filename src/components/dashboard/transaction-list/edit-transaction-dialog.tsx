@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { editTransactionSchema, type EditTransactionFormValues } from "@/validation/schemas/edit-transaction"
-import type { Transaction } from "@/types/transaction"
+import type { Transaction } from "@/interfaces/transaction-interface"
 
 interface EditTransactionDialogProps {
   open: boolean
