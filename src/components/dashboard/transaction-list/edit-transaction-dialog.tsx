@@ -36,9 +36,6 @@ interface EditTransactionDialogProps {
   categories: string[]
 }
 
-const incomeCategories = ["Gaji", "Freelance", "Investasi", "Bonus", "Lainnya"]
-const expenseCategories = ["Makanan", "Transportasi", "Belanja", "Tagihan", "Hiburan", "Kesehatan", "Lainnya"]
-
 export function EditTransactionDialog({
   open,
   onOpenChange,
