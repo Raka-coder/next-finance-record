@@ -19,6 +19,14 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   useEffect(() => {
     // Check if user is already authenticated
     if (isAuthenticated && user) {
+      // Get current path
+      const currentPath = window.location.pathname
+      
+      // Skip redirect for confirm and update-password routes
+      if (currentPath.startsWith('/confirm') || currentPath.startsWith('/update-password')) {
+        return
+      }
+      
       // Cek apakah ini kunjungan pertama setelah login
       const hasVisited = localStorage.getItem("hasVisitedDashboard")
       
@@ -56,17 +64,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     }
   }, [isAuthenticated, user, redirectToDashboard])
 
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+  const isConfirmOrUpdate = currentPath.startsWith('/confirm') || currentPath.startsWith('/update-password')
+
   if (loading) {
-    return (
-      <LoadingGlobal />
-    )
+    return <LoadingGlobal />
   }
 
-  // Don't render auth forms if already authenticated (will redirect)
-  if (isAuthenticated) {
-    return (
-      <LoadingToDashboard />
-    )
+  // Don't render loading for confirm and update-password routes
+  if (isAuthenticated && !isConfirmOrUpdate) {
+    return <LoadingToDashboard />
   }
 
   return <div className="min-h-screen flex items-center justify-center px-4">{children}</div>
