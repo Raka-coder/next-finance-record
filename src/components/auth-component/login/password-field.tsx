@@ -2,6 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { useFormContext } from "react-hook-form"
 import { LoginFormValues } from "@/validation/schemas/login"
+import ForgotPasswordLink from "./forgot-password-link"
 
 export function PasswordField() {
   const { control } = useFormContext<LoginFormValues>()
@@ -12,7 +13,10 @@ export function PasswordField() {
       name="password"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Password</FormLabel>
+          <div className="flex items-center justify-between">
+            <FormLabel>Password</FormLabel>
+            <ForgotPasswordLink />
+          </div>
           <FormControl>
             <Input placeholder="yourpassword" type="password" {...field} />
           </FormControl>
