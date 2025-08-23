@@ -33,15 +33,49 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser()
 
-  const publicPaths = ['/', '/login', '/register', '/error']
+  // const publicPaths = ['/', '/login', '/register', '/forgot-password', '/update-password', '/confirm', '/error']
 
-  // if user is not signed in and the current path is not public, redirect the user to /login
-  if (!user && !publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
-    // no user, potentially respond by redirecting the user to the login page
+  // // if user is not signed in and the current path is not public, redirect the user to /login
+  // // if (!user && !publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
+  // //   // no user, potentially respond by redirecting the user to the login page
+  // //   const url = request.nextUrl.clone()
+  // //   url.pathname = '/login'
+  // //   return NextResponse.redirect(url)
+  // // }
+
+  // const isPublicPath =
+  //   publicPaths.some((path) => request.nextUrl.pathname.startsWith(path)) ||
+  //   request.nextUrl.pathname.startsWith('/')
+
+  // if (!user && !isPublicPath) {
+  //   const url = request.nextUrl.clone()
+  //   url.pathname = '/login'
+  //   return NextResponse.redirect(url)
+  // }
+
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
+
+  // Define public paths that don't require authentication
+  const publicPaths = [
+    '/',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/update-password',
+    '/confirm'
+  ]
+
+  const isPublicPath = publicPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path) || request.nextUrl.pathname === '/'
+  )
+
+  if (!user && !isPublicPath) {
+    // no user and not a public path, redirect to login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
