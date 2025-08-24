@@ -18,7 +18,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
 import { CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, parse, isValid } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { cn } from "@/lib/utils"
 import { useForm } from "react-hook-form"
@@ -34,6 +34,36 @@ interface EditTransactionDialogProps {
   isSubmitting: boolean
   isFormChanged: boolean
   categories: string[]
+}
+
+// Fungsi untuk memparse tanggal dengan penanganan error
+const safeParseDate = (dateString: string) => {
+  try {
+    // Coba parse dengan format yang berbeda
+    const formats = ["yyyy-MM-dd", "dd-MM-yyyy", "dd/MM/yyyy"]
+    for (const fmt of formats) {
+      const parsed = parse(dateString, fmt, new Date())
+      if (isValid(parsed)) {
+        return parsed
+      }
+    }
+    // Jika semua format gagal, coba konversi langsung
+    const direct = new Date(dateString)
+    return isValid(direct) ? direct : new Date()
+  } catch {
+    return new Date()
+  }
+}
+
+// Fungsi untuk memformat tanggal dengan penanganan error
+const safeFormatDate = (date: Date | string | undefined) => {
+  if (!date) return ""
+  try {
+    const dateObj = typeof date === "string" ? safeParseDate(date) : date
+    return isValid(dateObj) ? format(dateObj, "dd MMMM yyyy", { locale: id }) : ""
+  } catch {
+    return ""
+  }
 }
 
 export function EditTransactionDialog({
@@ -52,7 +82,7 @@ export function EditTransactionDialog({
       amount: "",
       description: "",
       category: "",
-      date: new Date(),
+      date: format(new Date(), "yyyy-MM-dd"),
     },
   })
 
@@ -63,7 +93,7 @@ export function EditTransactionDialog({
         amount: transaction.amount.toString(),
         description: transaction.description,
         category: transaction.category,
-        date: new Date(transaction.date),
+        date: transaction.date, // Format sudah dalam yyyy-MM-dd
       })
     }
   }, [transaction, editForm])
@@ -145,7 +175,7 @@ export function EditTransactionDialog({
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value
-                              ? format(new Date(field.value), "dd MMMM yyyy")
+                              ? safeFormatDate(field.value)
                               : "Pilih tanggal"}
                           </Button>
                         </FormControl>
@@ -153,9 +183,11 @@ export function EditTransactionDialog({
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                          selected={field.value ? safeParseDate(field.value) : undefined}
+                          onSelect={(date) => 
+                            field.onChange(date ? format(date, "yyyy-MM-dd", { locale: id }) : "")
+                          }
+                          disabled={(date) => date > new Date()}
                           initialFocus
                           locale={id}
                         />

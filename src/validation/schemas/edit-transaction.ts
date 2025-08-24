@@ -10,9 +10,7 @@ export const editTransactionSchema = z.object({
     }),
   description: z.string().min(1, "Deskripsi harus diisi").trim(),
   category: z.string().min(1, "Kategori harus dipilih"),
-  date: z.date({
-    error: "Tanggal harus dipilih",
-  }),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal tidak valid"),
 });
 
 export type EditTransactionFormValues = z.infer<typeof editTransactionSchema>;

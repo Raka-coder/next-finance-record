@@ -1,6 +1,4 @@
-"use client"
-
-import { format } from "date-fns"
+import { format, parse, isValid } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { type Control } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -17,6 +15,26 @@ interface TransactionAmountDateFieldsProps {
 }
 
 export function TransactionAmountDateFields({ control }: TransactionAmountDateFieldsProps) {
+  // Fungsi untuk memparse tanggal dengan penanganan error
+  const safeParseDate = (dateString: string) => {
+    try {
+      const parsed = parse(dateString, "yyyy-MM-dd", new Date())
+      return isValid(parsed) ? parsed : undefined
+    } catch {
+      return undefined
+    }
+  }
+
+  // Fungsi untuk memformat tanggal dengan penanganan error
+  const safeFormatDate = (date: Date | undefined, formatString: string) => {
+    if (!date || !isValid(date)) return ""
+    try {
+      return format(date, formatString, { locale: id })
+    } catch {
+      return ""
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <FormField
@@ -51,7 +69,7 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {field.value
-                      ? format(new Date(field.value), "dd MMMM yyyy", {locale: id})
+                      ? safeFormatDate(safeParseDate(field.value), "dd MMMM yyyy")
                       : "Pilih tanggal"}
                   </Button>
                 </FormControl>
@@ -60,12 +78,13 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                 <Calendar
                   className="cursor-pointer"
                   mode="single"
-                  selected={field.value ? new Date(field.value) : undefined}
+                  selected={field.value ? safeParseDate(field.value) : undefined}
                   onSelect={(date) =>
-                    field.onChange(date ? format(date, "dd-MM-yyyy", {locale: id}) : "")
+                    field.onChange(date ? safeFormatDate(date, "yyyy-MM-dd") : "")
                   }
                   disabled={(date) => date > new Date()}
                   initialFocus
+                  locale={id}
                 />
               </PopoverContent>
             </Popover>

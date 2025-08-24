@@ -41,9 +41,23 @@ export function AddTransaction({ onAddTransaction }: AddTransactionProps) {
 
   const onSubmit = async (data: TransactionFormValues) => {
     try {
+      // Validasi dan konversi amount
+      const amount = Number.parseFloat(data.amount)
+      if (isNaN(amount)) {
+        toast.error("Jumlah transaksi tidak valid")
+        return
+      }
+
+      // Validasi format tanggal
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+      if (!dateRegex.test(data.date)) {
+        toast.error("Format tanggal tidak valid")
+        return
+      }
+
       await onAddTransaction({
         type: data.type,
-        amount: Number.parseFloat(data.amount),
+        amount: amount,
         description: data.description,
         category: data.category,
         date: data.date,
@@ -51,8 +65,9 @@ export function AddTransaction({ onAddTransaction }: AddTransactionProps) {
 
       form.reset()
       toast.success("Transaksi berhasil ditambahkan!")
-    } catch (error) {
-      toast.error("Gagal menambahkan transaksi. Silakan coba lagi.")
+    } catch (error: any) {
+      console.error("Error adding transaction:", error)
+      toast.error(error.message || "Gagal menambahkan transaksi. Silakan coba lagi.")
     } finally {
       form.resetField("amount")
       form.resetField("description")
