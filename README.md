@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FinanceRecord - Aplikasi Manajemen Keuangan
 
-## Getting Started
+![Dashboard Screenshot](https://via.placeholder.com/800x400.png?text=Screenshot+Dashboard+FinanceRecord)
 
-First, run the development server:
+**FinanceRecord** adalah platform manajemen keuangan modern yang membantu Anda melacak pemasukan, pengeluaran, dan mencapai tujuan finansial dengan visualisasi data yang menarik dan keamanan tingkat lanjut.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Fitur Utama
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Manajemen Transaksi**: Catat pemasukan dan pengeluaran dengan mudah, lengkap dengan kategori.
+- **Dashboard Interaktif**: Visualisasikan kondisi keuangan Anda melalui grafik dan bagan yang informatif.
+- **Analisis Kategori**: Lihat distribusi pemasukan dan pengeluaran berdasarkan kategori teratas.
+- **Keamanan Terjamin**: Dibangun di atas Supabase dengan *Row Level Security* untuk memastikan data Anda hanya dapat diakses oleh Anda.
+- **Akses Multi-Platform**: Desain responsif memastikan pengalaman pengguna yang optimal di web, mobile, dan desktop.
+- **Mode Terang & Gelap**: Tampilan yang nyaman di mata, kapan pun Anda menggunakannya.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Teknologi yang Digunakan
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Backend & Database**: [Supabase](https://supabase.io/)
+- **Visualisasi Data**: [Highcharts](https://www.highcharts.com/)
+- **Animasi**: [Framer Motion](https://www.framer.com/motion/)
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Memulai Proyek
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di lingkungan lokal Anda.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prasyarat
 
-## Deploy on Vercel
+- [Node.js](https://nodejs.org/) (v18 atau lebih baru)
+- [Docker](https://www.docker.com/products/docker-desktop/) & [Docker Compose](https://docs.docker.com/compose/)
+- Akun [Supabase](https://supabase.com/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 1. Konfigurasi Supabase
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Buat proyek baru di Supabase.
+2.  Di dalam SQL Editor, jalankan skrip berikut untuk membuat tabel `transactions`:
+    ```sql
+    CREATE TABLE transactions (
+      id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+      user_id UUID REFERENCES auth.users(id) NOT NULL,
+      date TIMESTAMPTZ NOT NULL,
+      description TEXT NOT NULL,
+      amount NUMERIC NOT NULL,
+      type TEXT NOT NULL, -- 'income' or 'expense'
+      category TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    -- Aktifkan Row Level Security (RLS)
+    ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+
+    -- Buat policy agar user hanya bisa melihat dan mengubah datanya sendiri
+    CREATE POLICY "Enable access for authenticated users only"
+    ON transactions
+    FOR ALL
+    TO authenticated
+    USING (auth.uid() = user_id);
+    ```
+
+### 2. Instalasi Lokal
+
+1.  **Clone repository ini:**
+    ```bash
+    git clone https://github.com/username/project-next-docker.git
+    cd project-next-docker
+    ```
+
+2.  **Buat file environment:**
+    Buat file `.env.local` di root proyek dan isi dengan kredensial dari proyek Supabase Anda.
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+    ```
+
+3.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+4.  **Jalankan server development:**
+    ```bash
+    npm run dev
+    ```
+    Aplikasi akan berjalan di http://localhost:3000.
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
+
+---
+
+Dibuat dengan ❤️ untuk manajemen keuangan yang lebih baik.
