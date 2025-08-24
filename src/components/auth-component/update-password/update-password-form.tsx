@@ -2,94 +2,97 @@
 
 import { cn } from '@/lib/utils'
 import { supabase } from '@/utils/supabase/client'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { updatePasswordSchema } from '@/validation/schemas/update-password'
 import { z } from 'zod'
+import { toast } from 'sonner'
+import { updatePasswordSchema } from '@/validation/schemas/update-password'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import {
+  Form,
+} from '@/components/ui/form'
+import { UpdatePasswordCard } from '../update-password-card'
+import { PasswordField } from './password-field'
+import { ConfirmPasswordField } from './confirm-password-field'
+import { SubmitButton } from './submit-button'
+import { ErrorMessage } from './error-message'
 
-export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+// Props interface for the main form component
+interface UpdatePasswordFormProps extends React.ComponentPropsWithoutRef<'div'> {
+  onPasswordUpdateSuccess?: () => void
+}
+
+// Main update password form component
+export function UpdatePasswordForm({ className, onPasswordUpdateSuccess, ...props }: UpdatePasswordFormProps) {
   const router = useRouter()
 
-  const handleUpdatePassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+  // Initialize form with Zod validation schema
+  const form = useForm<z.infer<typeof updatePasswordSchema>>({
+    resolver: zodResolver(updatePasswordSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  })
 
+  const isLoading = form.formState.isSubmitting
+
+  // Handle form submission
+  async function onSubmit(values: z.infer<typeof updatePasswordSchema>) {
     try {
-      // Validate password first
-      const validatedData = updatePasswordSchema.parse({
-        password,
-        confirmPassword
+      // Update user password in Supabase
+      const { error } = await supabase.auth.updateUser({
+        password: values.password,
+      })
+
+      if (error) throw error
+
+      // Show success toast notification
+      toast.success('Password berhasil diubah!', {
+        description: 'Anda dapat login dengan password baru Anda.',
+      })
+
+      // Call success callback or redirect to login
+      if (onPasswordUpdateSuccess) {
+        onPasswordUpdateSuccess()
+      } else {
+        router.push('/login')
+      }
+    } catch (error) {
+      // Set form-level error message
+      form.setError('root', {
+        message: error instanceof Error ? error.message : 'An error occurred while updating password',
       })
       
-      const { error } = await supabase.auth.updateUser({ 
-        password: validatedData.password 
+      // Show error toast notification
+      toast.error('Gagal mengubah password', {
+        description: 'Terjadi kesalahan saat mengubah password Anda.',
       })
-      if (error) throw error
-      router.push('/login')
-    } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
-        setError(error.issues[0].message)
-      } else {
-        setError(error instanceof Error ? error.message : 'An error occurred')
-      }
-    } finally {
-      setIsLoading(false)
     }
   }
 
   return (
     <div className={cn('flex flex-col gap-6 w-[300px]', className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>Please enter your new password below.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleUpdatePassword}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="password">New password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="New password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <Label htmlFor="confirmPassword">Confirm password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Saving...' : 'Save new password'}
-              </Button>
+      <UpdatePasswordCard>
+        {/* Form provider that passes form methods to child components */}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid gap-4">
+              {/* Password input field */}
+              <PasswordField form={form} />
+
+              {/* Confirm password input field */}
+              <ConfirmPasswordField form={form} />
             </div>
+
+            {/* Display form-level error message if exists */}
+            <ErrorMessage message={form.formState.errors.root?.message} />
+
+            {/* Submit button */}
+            <SubmitButton isLoading={isLoading} />
           </form>
-        </CardContent>
-      </Card>
+        </Form>
+      </UpdatePasswordCard>
     </div>
   )
 }
