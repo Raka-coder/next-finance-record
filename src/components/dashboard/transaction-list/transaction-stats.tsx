@@ -18,7 +18,7 @@ export function TransactionStats({
   formatCurrency
 }: TransactionStatsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-muted/50 rounded-lg">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-muted/50 rounded-lg">
       <div className="text-center">
         <div className="text-lg font-semibold text-green-500">
           {formatCurrency(income)}
