@@ -23,9 +23,9 @@ export function Settings({ user, profile = null }: SettingsProps) {
       {/* Profile Settings */}
       <ProfileSettingsCard user={user} profile={profile} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         {/* Notification Settings */}
-        <NotificationSettingsCard />
+        {/* <NotificationSettingsCard /> */}
 
         {/* Appearance Settings */}
         <AppearanceSettingsCard />
