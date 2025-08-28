@@ -30,7 +30,6 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di lingkungan lo
 ### Prasyarat
 
 - [Node.js](https://nodejs.org/) (v18 atau lebih baru)
-- [Docker](https://www.docker.com/products/docker-desktop/) & [Docker Compose](https://docs.docker.com/compose/)
 - Akun [Supabase](https://supabase.com/)
 
 ### 1. Konfigurasi Supabase
