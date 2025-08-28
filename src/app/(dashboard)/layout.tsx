@@ -54,14 +54,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
 
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
-  const toastShown = useRef(false)
+  // const toastShown = useRef(false)
 
   useEffect(() => {
     // Redirect to login if not authenticated and not already loading
-    if (!loading && !isAuthenticated) {
+    if (!loading && (!isAuthenticated || !user)) {
       redirectToLogin()
     }
-  }, [loading, isAuthenticated, redirectToLogin])
+  }, [loading, isAuthenticated, user, redirectToLogin])
 
   // Show welcome toast only once per session
   // useEffect(() => {
