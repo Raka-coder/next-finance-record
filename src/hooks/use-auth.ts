@@ -17,6 +17,7 @@ export function useAuth() {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
+        setUser(null)
         setIsAuthenticated(false)
         setLoading(false)
         return
@@ -31,8 +32,17 @@ export function useAuth() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
-        setIsAuthenticated(false)
         setUser(null)
+        setIsAuthenticated(false)
+        setLoading(false)
+        // Redirect to login if on a protected page
+        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login') && 
+            !window.location.pathname.startsWith('/register') && 
+            !window.location.pathname.startsWith('/forgot-password') &&
+            !window.location.pathname.startsWith('/update-password') &&
+            !window.location.pathname.startsWith('/confirm')) {
+          router.push("/login")
+        }
         return
       }
       setUser(session.user)
@@ -44,6 +54,9 @@ export function useAuth() {
   }, [router])
 
   const redirectToLogin = () => {
+    // Clear user state immediately
+    setUser(null)
+    setIsAuthenticated(false)
     router.push("/login")
   }
 
@@ -64,8 +77,14 @@ export function useAuth() {
       }
 
       // Clear any local storage or cache if needed
-      localStorage.removeItem('user-preferences')
-      localStorage.removeItem('hasVisitedDashboard')
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('user-preferences')
+        localStorage.removeItem('hasVisitedDashboard')
+      }
+      
+      // Clear user state
+      setUser(null)
+      setIsAuthenticated(false)
       
       // Redirect to login page
       redirectToLogin()
