@@ -72,7 +72,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   }
 
   // Don't render loading for confirm and update-password routes
-  if (isAuthenticated && !isConfirmOrUpdate) {
+  if (isAuthenticated && user && !isConfirmOrUpdate) {
     return <LoadingToDashboard />
   }
 
