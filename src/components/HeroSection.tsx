@@ -60,9 +60,9 @@ export default function HeroSection() {
                   className="font-medium px-4 py-4 w-full"
                 >
                   <Eye className="w-5 h-5 mt-0.5 mr-1" />
-                  <a href="#demo" onClick={handleDemoClick}>
+                  <Link href="#demo" passHref onClick={handleDemoClick}>
                     Lihat Demo
-                  </a>
+                  </Link>
                 </Button>
               </motion.div>
             </div>
