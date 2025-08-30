@@ -322,7 +322,7 @@ export function DataExportSection({ user }: DataExportSectionProps) {
         {/* Data Summary */}
         {summaryLoading ? (
           <div className="flex items-center justify-center p-4 bg-muted/50 rounded-lg">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            <Loader2 className="h-4 w-4 animate-spin" />
             <span className="ml-2 text-sm">Memuat ringkasan data...</span>
           </div>
         ) : summaryError ? (
