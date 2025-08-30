@@ -313,10 +313,7 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
               </form>
             </DialogContent>
           </Dialog>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profil</span>
-          </DropdownMenuItem>
+          
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
               <Link href="/dashboard/settings">            
