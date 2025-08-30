@@ -2,7 +2,6 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { generateMetadata } from "@/lib/metadata"
 
 // Define metadata for each dashboard route
 const dashboardMetadataMap: Record<string, { title: string; description: string }> = {
