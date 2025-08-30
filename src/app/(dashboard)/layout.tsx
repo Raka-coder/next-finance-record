@@ -20,6 +20,7 @@ import { useProfile } from "@/hooks/use-profile"
 import { useAuth } from "@/hooks/use-auth"
 import LoadingGlobal from "@/components/loading/loading-global"
 import LoadingToLogin from "@/components/loading/loading-to-login"
+import { SEO } from "@/components/seo/seo"
 // Import menu items for consistent naming
 const menuItems = [
   {
@@ -143,6 +144,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     )
   }
 
+  // Get SEO metadata for current page
+  const getCurrentPageSEO = () => {
+    const pageData = menuItems.find(item => item.href === pathname) || 
+                     menuItems.find(item => pathname.startsWith(item.href)) || 
+                     { title: "Dashboard", description: "Dashboard keuangan pribadi Anda" }
+    
+    return {
+      title: pageData.title,
+      description: `Halaman ${pageData.title.toLowerCase()} - ${pageData.description || "Kelola keuangan pribadi Anda dengan mudah, transparan, dan efisien."}`
+    }
+  }
+
+  const seoData = getCurrentPageSEO()
+
   // Show loading spinner while checking authentication
   if (loading) {
     return (
@@ -158,26 +173,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <Breadcrumb>{getBreadcrumbs()}</Breadcrumb>
+    <>
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+      />
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>{getBreadcrumbs()}</Breadcrumb>
 
-          {/* User Menu di ujung kanan */}
-          <div className="ml-auto">
-            <UserMenu
-              profile={profile}
-              onProfileUpdate={updateProfile}
-              onProfileCreate={createProfile}
-              userEmail={user.email}
-            />
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+            {/* User Menu di ujung kanan */}
+            <div className="ml-auto">
+              <UserMenu
+                profile={profile}
+                onProfileUpdate={updateProfile}
+                onProfileCreate={createProfile}
+                userEmail={user.email}
+              />
+            </div>
+          </header>
+          <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </>
   )
 }
