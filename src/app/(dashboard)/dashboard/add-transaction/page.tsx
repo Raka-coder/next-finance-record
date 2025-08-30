@@ -3,6 +3,7 @@
 import { AddTransaction } from "@/components/dashboard/add-transaction"
 import { useTransactions } from "@/hooks/use-transaction"
 import { useRouter } from "next/navigation"
+import { DashboardSEO } from "@/components/dashboard/dashboard-seo"
 
 export default function TambahTransaksiPage() {
   const { addTransaction } = useTransactions()
@@ -19,5 +20,13 @@ export default function TambahTransaksiPage() {
     }
   }
 
-  return <AddTransaction onAddTransaction={handleAddTransaction} />
+  return (
+    <>
+      <DashboardSEO 
+        title="Tambah Transaksi" 
+        description="Tambahkan transaksi pemasukan atau pengeluaran baru ke dalam catatan keuangan Anda."
+      />
+      <AddTransaction onAddTransaction={handleAddTransaction} />
+    </>
+  )
 }

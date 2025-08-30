@@ -4,6 +4,7 @@ import { Settings } from "@/components/dashboard/settings"
 import { useProfile } from "@/hooks/use-profile"
 import { useAuth } from "@/hooks/use-auth"
 import Loading from "@/components/loading/loading-component"
+import { DashboardSEO } from "@/components/dashboard/dashboard-seo"
 
 export default function PengaturanPage() {
   const { user, loading } = useAuth()
@@ -11,7 +12,13 @@ export default function PengaturanPage() {
 
   if (loading) {
     return (
-      <Loading />
+      <>
+        <DashboardSEO 
+          title="Pengaturan" 
+          description="Kelola pengaturan akun dan preferensi aplikasi keuangan Anda."
+        />
+        <Loading />
+      </>
     )
   }
 
@@ -23,5 +30,13 @@ export default function PengaturanPage() {
     )
   }
 
-  return <Settings user={user} profile={profile} />
+  return (
+    <>
+      <DashboardSEO 
+        title="Pengaturan" 
+        description="Kelola pengaturan akun dan preferensi aplikasi keuangan Anda."
+      />
+      <Settings user={user} profile={profile} />
+    </>
+  )
 }
