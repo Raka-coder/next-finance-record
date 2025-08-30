@@ -19,7 +19,7 @@ export function RegisterCard({ onRegisterSuccess }: RegisterCardProps) {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="max-w-md">
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
           <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -27,7 +27,7 @@ export function RegisterCard({ onRegisterSuccess }: RegisterCardProps) {
           </div>
         </div>
         <CardTitle className="text-2xl">Buat Akun Baru</CardTitle>
-        <CardDescription>Daftar untuk mulai mengelola keuangan Anda</CardDescription>
+        <CardDescription>Register untuk mulai mengelola keuangan Anda</CardDescription>
       </CardHeader>
       <CardContent>
         <RegisterForm onRegisterSuccess={onRegisterSuccess || handleRegisterSuccess} />

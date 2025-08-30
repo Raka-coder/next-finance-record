@@ -17,7 +17,7 @@ export function LoginCard({ onLoginSuccess }: LoginCardProps) {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="max-w-md">
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
           <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -25,7 +25,7 @@ export function LoginCard({ onLoginSuccess }: LoginCardProps) {
           </div>
         </div>
         <CardTitle className="text-2xl">Masuk ke Akun</CardTitle>
-        <CardDescription>Masukkan email dan password untuk masuk</CardDescription>
+        <CardDescription>Masukkan email dan password untuk login</CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm onLoginSuccess={onLoginSuccess || handleLoginSuccess} />

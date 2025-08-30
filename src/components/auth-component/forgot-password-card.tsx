@@ -21,7 +21,7 @@ interface ForgotPasswordCardProps {
 // Displays a title, description, form content, and footer
 export function ForgotPasswordCard({ children }: ForgotPasswordCardProps) {
   return (
-    <Card>
+    <Card className='max-w-md'>
       <CardHeader>
         <CardTitle className="text-2xl text-center">Atur Ulang Kata Sandi</CardTitle>
         <CardDescription className="text-center">

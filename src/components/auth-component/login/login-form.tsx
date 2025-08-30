@@ -55,7 +55,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   return (
     <div className="w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-[260px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:w-[300px] w-[280px]">
           <EmailField />
           <PasswordField />
           <SubmitButton loading={isSubmitting} />

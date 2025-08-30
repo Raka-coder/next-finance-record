@@ -77,7 +77,7 @@ export function ForgotPasswordForm({ className, ...props }: ForgotPasswordFormPr
   }
 
   return (
-    <div className={cn('flex flex-col gap-6 w-[300px]', className)} {...props}>
+    <div className={cn('flex flex-col gap-6 md:w-[300px] w-[280px]', className)} {...props}>
       {success ? (
         // Show success message if request was successful
         <ForgotPasswordSuccess />

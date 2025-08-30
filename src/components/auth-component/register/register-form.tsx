@@ -85,7 +85,7 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   return (
     <div className="w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-[300px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:w-[300px] w-[280px]">
           <FullNameField />
           <UsernameField />
           <EmailField />
