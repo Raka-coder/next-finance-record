@@ -2,14 +2,14 @@ import { ForgotPasswordForm } from "@/components/auth-component/forgot-password/
 import { generatePublicPageMetadata } from "@/components/seo/public-page-seo"
 
 export const metadata = generatePublicPageMetadata({
-  title: "Lupa Password",
+  title: "Forgot Password",
   description: "Atur ulang password akun FinanceRecord Anda.",
   path: "/forgot-password",
 })
 
-export default function page() {
+export default function ForgotPasswordPage() {
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen">
         <ForgotPasswordForm />
     </div>
   )

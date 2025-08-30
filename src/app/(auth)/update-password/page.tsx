@@ -9,7 +9,7 @@ export const metadata = generatePublicPageMetadata({
 
 export default function page() {
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen">
         <UpdatePasswordForm />
     </div>
   )

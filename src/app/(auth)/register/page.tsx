@@ -2,7 +2,7 @@ import { RegisterCard } from "@/components/auth-component/register-card"
 import { generatePublicPageMetadata } from "@/components/seo/public-page-seo"
 
 export const metadata = generatePublicPageMetadata({
-  title: "Daftar",
+  title: "Register",
   description: "Buat akun FinanceRecord baru untuk mulai mengelola keuangan Anda.",
   path: "/register",
 })
