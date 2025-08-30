@@ -52,7 +52,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-2">
-            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Wallet className="w-5 h-5 text-primary-foreground" />
             </div>
             <Link href="/" className="text-lg lg:text-lg font-medium">
@@ -81,8 +81,8 @@ export default function Navbar() {
               Demo
             </motion.a>
             <motion.a
-              href="#testimonials"
-              onClick={(e) => handleMenuClick(e, "testimonials")}
+              href="#reviews"
+              onClick={(e) => handleMenuClick(e, "reviews")}
               className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
