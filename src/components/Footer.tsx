@@ -3,19 +3,17 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 
 const socialLinks = [
-  { href: "#", icon: Github, label: "Github" },
-  { href: "#", icon: Globe, label: "Globe" },
+  { href: "https://github.com/Raka-coder/next-finance-record", icon: Github, label: "Github" },
 ];
 
 const productLinks = [
-  { href: "#", label: "Dashboard" },
-  { href: "#", label: "Laporan" },
-  { href: "#", label: "Analytics" },
+  { href: "/", label: "Dashboard" },
+  { href: "/", label: "Laporan" },
+  { href: "/", label: "Analytics" },
 ];
 
 const supportLinks = [
-  { href: "#", label: "Dokumentasi" },
-  { href: "#", label: "Tutorial" },
+  { href: "https://github.com/Raka-coder/next-finance-record", label: "Dokumentasi" },
 ];
 
 export default function Footer() {
@@ -79,7 +77,7 @@ export default function Footer() {
         <div className="border-t pt-8">
           <div className="flex flex-col md:flex-row justify-center items-center">
             <p className="text-muted-foreground text-sm text-center">
-              © 2025 FinanceTracker. All rights reserved.
+              © 2025 FinanceRecord. All rights reserved.
             </p>
             {/* <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Privacy Policy</a>

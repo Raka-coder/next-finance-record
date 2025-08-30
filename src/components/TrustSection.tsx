@@ -3,6 +3,7 @@ import { CheckCircle2, Github, Lock, Database, Users, ExternalLink, Shield, Glob
 import { Card, CardContent, CardTitle, CardDescription } from "./ui/card";
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function TrustSection() {
   return (
@@ -91,7 +92,7 @@ export default function TrustSection() {
                   dapat dilakukan oleh siapa saja.
                 </CardDescription>
                 <Button variant="outline" size="sm">
-                  <span>Lihat di GitHub</span>
+                  <Link href="https://github.com/Raka-coder/next-finance-record">Lihat di Github</Link>
                   <ExternalLink className="w-4 h-4 ml-1" />
                 </Button>
               </CardContent>
@@ -110,7 +111,7 @@ export default function TrustSection() {
                   implementasi untuk transparansi.
                 </CardDescription>
                 <Button variant="outline" size="sm">
-                  <span>Baca Dokumentasi</span>
+                  <Link href="https://github.com/Raka-coder/next-finance-record">Baca Dokumentasi</Link>
                   <ExternalLink className="w-4 h-4 ml-1" />
                 </Button>
               </CardContent>
