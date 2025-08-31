@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export const TypewriterEffect = () => {
   const [text, setText] = useState("");
@@ -8,7 +8,7 @@ export const TypewriterEffect = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const words = ["Pemasukan", "Pengeluaran", "Keuangan"];
+  const words = useMemo(() => ["Pemasukan", "Pengeluaran", "Keuangan"], []);
 
   useEffect(() => {
     const handleType = () => {
