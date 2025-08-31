@@ -1,4 +1,4 @@
-import { Wallet, Github, Globe } from "lucide-react";
+import { Wallet, Github } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
