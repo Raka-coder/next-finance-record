@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ProfileService } from "@/services/profile.service"
 import type { Profile } from "@/interfaces/profile-interface"
 
@@ -9,7 +9,7 @@ export function useProfile(userId: string | undefined) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!userId) {
       setLoading(false)
       return
@@ -31,7 +31,7 @@ export function useProfile(userId: string | undefined) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!userId) {
@@ -73,7 +73,7 @@ export function useProfile(userId: string | undefined) {
 
   useEffect(() => {
     fetchProfile()
-  }, [userId])
+  }, [fetchProfile])
 
   return {
     profile,
