@@ -65,9 +65,9 @@ export function AddTransaction({ onAddTransaction }: AddTransactionProps) {
 
       form.reset()
       toast.success("Transaksi berhasil ditambahkan!")
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error adding transaction:", error)
-      toast.error(error.message || "Gagal menambahkan transaksi. Silakan coba lagi.")
+      toast.error((error as Error).message || "Gagal menambahkan transaksi. Silakan coba lagi.")
     } finally {
       form.resetField("amount")
       form.resetField("description")
