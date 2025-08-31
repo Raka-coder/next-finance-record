@@ -8,7 +8,7 @@ import { DashboardSEO } from "@/components/dashboard/dashboard-seo"
 
 export default function PengaturanPage() {
   const { user, loading } = useAuth()
-  const { profile, updateProfile } = useProfile(user?.id)
+  const { profile } = useProfile(user?.id)
 
   if (loading) {
     return (
