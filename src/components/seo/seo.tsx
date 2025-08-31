@@ -14,7 +14,7 @@ export function SEO({
   title = "FinanceRecord",
   description = "Kelola keuangan pribadi Anda dengan mudah, transparan, dan efisien.",
   keywords = "keuangan, pengelolaan keuangan, catatan keuangan, pemasukan, pengeluaran",
-  image = "/favicon.ico",
+  image = "/wallet.svg",
   url = "https://finance-record.vercel.app",
   type = "website"
 }: SEOProps) {
@@ -42,7 +42,7 @@ export function SEO({
       
       {/* Additional meta tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/wallet.svg" />
     </Head>
   )
 }

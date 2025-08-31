@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head/>
+      <head>
+        <link rel="icon" href="/wallet.svg" type="image/svg+xml" />
+      </head>
       <body
         className={`${rubikSans.variable} antialiased`}
       >
