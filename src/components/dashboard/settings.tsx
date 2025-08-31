@@ -14,11 +14,6 @@ interface SettingsProps {
 export function Settings({ user, profile = null }: SettingsProps) {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center gap-2 mb-6">
-        <SettingsIcon className="size-6" />
-        <h1 className="text-2xl font-bold">Pengaturan</h1>
-      </div>
-
       {/* Profile Settings */}
       <ProfileSettingsCard user={user} profile={profile} />
 
