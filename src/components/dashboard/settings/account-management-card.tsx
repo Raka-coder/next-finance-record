@@ -11,7 +11,7 @@ interface AccountManagementCardProps {
   user: User
 }
 
-export function AccountManagementCard({ user }: AccountManagementCardProps) {
+export function AccountManagementCard({ }: AccountManagementCardProps) {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
 
   const handleSignOut = async () => {
