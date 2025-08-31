@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { LogOut } from "lucide-react"
+import { LogOut, CircleUserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LogoutDialog } from "@/components/dialog/logout-dialog"
@@ -22,7 +22,10 @@ export function AccountManagementCard({ }: AccountManagementCardProps) {
     <>
       <Card className="border-red-200">
         <CardHeader>
-          <CardTitle className="text-red-600">Akun</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-red-600">
+            <CircleUserRound className="size-5" />
+            Akun
+          </CardTitle>
           <CardDescription>Kelola akun Anda</CardDescription>
         </CardHeader>
         <CardContent>
