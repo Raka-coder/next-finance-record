@@ -17,7 +17,7 @@ export function UsernameField() {
             <Input
               placeholder="username"
               {...field}
-              onBlur={async (e) => {
+              onBlur={async () => {
                 field.onBlur()
                 // Validasi akan dilakukan di komponen parent
               }}
