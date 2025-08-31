@@ -1,6 +1,6 @@
 import type { Transaction } from "@/interfaces/transaction-interface"
 
-export function exportToCSV(transactions: Transaction[], userEmail: string): boolean {
+export function exportToCSV(transactions: Transaction[]): boolean {
   try {
     // Define CSV headers
     const headers = ["Tanggal", "Jenis", "Jumlah", "Deskripsi", "Kategori", "Dibuat", "Diperbarui"]

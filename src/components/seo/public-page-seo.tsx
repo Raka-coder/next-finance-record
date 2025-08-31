@@ -6,7 +6,7 @@ interface PublicPageSEOProps {
   path: string
 }
 
-export function PublicPageSEO({ title, description, path }: PublicPageSEOProps) {
+export function PublicPageSEO({  }: PublicPageSEOProps) {
   // This component doesn't render anything, it just defines metadata
   // The actual metadata is generated at build time
   return null
