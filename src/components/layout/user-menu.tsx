@@ -106,6 +106,7 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       editForm.full_name !== profile?.full_name
 
     if (!hasChanges) {
+      console.error("Tidak ada profil yang diubah")
       toast.error("Tidak ada profil yang diubah")
       setLoading(false)
       return
@@ -125,7 +126,8 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
 
       setIsEditDialogOpen(false)
       toast.success("Profil berhasil diperbarui!")
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("Error updating profile", error)
       toast.error("Gagal memperbarui profil")
     } finally {
       setLoading(false)
@@ -148,7 +150,8 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
         setIsCreateDialogOpen(false)
         alert("Profil berhasil dibuat!")
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("Error creating profile",error)
       alert("Gagal membuat profil")
     } finally {
       setLoading(false)
