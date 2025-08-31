@@ -15,7 +15,7 @@ export function SEO({
   description = "Kelola keuangan pribadi Anda dengan mudah, transparan, dan efisien.",
   keywords = "keuangan, pengelolaan keuangan, catatan keuangan, pemasukan, pengeluaran",
   image = "/wallet.svg",
-  url = "https://finance-record.vercel.app",
+  url = "https://financerecord.vercel.app/",
   type = "website"
 }: SEOProps) {
   const fullTitle = title.includes("FinanceRecord") ? title : `${title} | FinanceRecord`
@@ -25,6 +25,7 @@ export function SEO({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      <meta name="author" content={title}/>
       
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
@@ -32,7 +33,7 @@ export function SEO({
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="FinanceRecord" />
+      <meta property="og:site_name" content={title} />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
