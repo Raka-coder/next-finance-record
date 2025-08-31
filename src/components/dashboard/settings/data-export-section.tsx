@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { CalendarIcon, Download, CheckCircle, AlertCircle, Info, Loader2 } from "lucide-react"
@@ -52,7 +52,7 @@ export function DataExportSection({ user }: DataExportSectionProps) {
     }
   }, [user.email])
 
-  const loadExportSummary = async () => {
+  const loadExportSummary = useCallback(async () => {
     if (!user.email) {
       console.log("No user email available")
       return
@@ -82,7 +82,7 @@ export function DataExportSection({ user }: DataExportSectionProps) {
     } finally {
       setSummaryLoading(false)
     }
-  }
+  }, [user.email])
 
   const handleExportData = async () => {
     if (!user.email) {
