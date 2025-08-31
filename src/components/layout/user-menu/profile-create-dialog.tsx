@@ -37,7 +37,7 @@ export function ProfileCreateDialog({ open, onOpenChange, onProfileCreate }: Pro
       form.reset({ full_name: "", username: "" })
       setUsernameError("")
     }
-  }, [open])
+  }, [open, form])
 
   const handleCreateProfile = async (values: ProfileSchema) => {
     setLoading(true)
