@@ -27,7 +27,7 @@ interface ForgotPasswordFormProps extends React.ComponentPropsWithoutRef<'div'> 
 // Handles form submission, validation, and displays success or error messages
 export function ForgotPasswordForm({ className, ...props }: ForgotPasswordFormProps) {
   // State for managing error messages
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   // State for tracking if the password reset request was successful
   const [success, setSuccess] = useState(false)
   // State for tracking if the request is currently loading
