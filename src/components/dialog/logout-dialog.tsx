@@ -39,8 +39,9 @@ export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDial
           onLogoutSuccess()
         }
       }
-    } catch (err) {
+    } catch (error: unknown) {
       // Error handling is done in the hook, just show toast
+      console.error("Logout Error", error)
       toast.error("Logout gagal!")
     }
   }
