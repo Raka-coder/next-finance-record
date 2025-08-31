@@ -50,7 +50,7 @@ export function ProfileEditDialog({ profile, open, onOpenChange, onProfileUpdate
       setInitialProfile(initial)
       setUsernameError("")
     }
-  }, [open, profile])
+  }, [open, profile, form])
 
   // Cek apakah form berubah
   const isFormChanged = !isEqual(form.watch(), initialProfile)
