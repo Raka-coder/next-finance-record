@@ -12,6 +12,7 @@ import { TransactionStats } from "./transaction-list/transaction-stats"
 import { TransactionTable } from "./transaction-list/transaction-table"
 import { EditTransactionDialog } from "./transaction-list/edit-transaction-dialog"
 import { TransactionPagination } from "./transaction-list/transaction-pagination"
+import type { EditTransactionFormValues } from "@/validation/schemas/edit-transaction"
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -151,7 +152,7 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
     setEditingTransaction(transaction)
   }, [])
 
-  const handleUpdate = useCallback(async (data: any) => {
+  const handleUpdate = useCallback(async (data: EditTransactionFormValues) => {
     if (!editingTransaction) return
 
     if (!isFormChanged) {
@@ -172,7 +173,8 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
 
       setEditingTransaction(null)
       toast.success("Transaksi berhasil diperbarui!")
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("Error updating transaction:", error)
       toast.error("Gagal memperbarui transaksi")
     }
   }, [editingTransaction, onUpdateTransaction])
@@ -253,7 +255,7 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
   }, [currentPageData])
 
   // Fungsi untuk membandingkan dua objek transaksi
-  const isTransactionChanged = useCallback((original: any, current: any): boolean => {
+  const isTransactionChanged = useCallback((original: Record<string, unknown>, current: Record<string, unknown>): boolean => {
     // Bandingkan setiap field yang relevan
     if (original.amount !== current.amount) return true
     if (original.date !== current.date) return true
