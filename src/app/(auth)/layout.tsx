@@ -40,9 +40,9 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       } else if (!toastShown.current) {
         // Ini adalah kunjungan kembali (misalnya setelah refresh)
         toastShown.current = true
-        toast.message("Login Berhasil!", {
-          description: "Selamat Datang Kembali!",
-        })
+        // toast.message("Login Berhasil!", {
+        //   description: "Selamat Datang Kembali!",
+        // })
       }
       
       redirectToDashboard()
