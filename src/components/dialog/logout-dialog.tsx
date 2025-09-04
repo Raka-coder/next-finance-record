@@ -32,7 +32,6 @@ export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDial
       if (result) {
         // Close dialog
         onOpenChange(false)
-        toast.message("Logout berhasil!")
         
         // Call success callback if provided
         if (onLogoutSuccess) {
@@ -41,8 +40,8 @@ export function LogoutDialog({ open, onOpenChange, onLogoutSuccess }: LogoutDial
       }
     } catch (error: unknown) {
       // Error handling is done in the hook, just show toast
+      toast.error("Logout gagal")
       console.error("Logout Error", error)
-      toast.error("Logout gagal!")
     }
   }
 
