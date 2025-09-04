@@ -34,7 +34,13 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: DO NOT REMOVE auth.getUser()
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser()
+
+  // Log any auth errors for debugging
+  if (error) {
+    console.error('Auth error in middleware:', error)
+  }
 
   // Define public paths that don't require authentication
   const publicPaths = [
@@ -51,7 +57,7 @@ export async function updateSession(request: NextRequest) {
   )
 
   // If user is not authenticated and trying to access protected routes, redirect to login
-  if (!user && !isPublicPath) {
+  if ((!user || error) && !isPublicPath) {
     // no user and not a public path, redirect to login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -59,7 +65,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If user is authenticated and trying to access auth pages, redirect to dashboard
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
+  if (user && !error && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
