@@ -49,11 +49,10 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, loading, isAuthenticated, redirectToLogin } = useAuth()
+  const { user, loading, isAuthenticated, redirectToLogin, checkSession } = useAuth()
   const pathname = usePathname()
 
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
-  // const toastShown = useRef(false)
 
   useEffect(() => {
     // Redirect to login if not authenticated and not already loading
@@ -62,41 +61,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   }, [loading, isAuthenticated, user, redirectToLogin])
 
-  // Show welcome toast only once per session
-  // useEffect(() => {
-  //   if (isAuthenticated && user && !toastShown.current) {
-  //     // Cek apakah toast sudah ditampilkan dalam sesi ini
-  //     const toastDisplayed = sessionStorage.getItem("toastDisplayed")
-      
-  //     if (!toastDisplayed && !toastShown.current) {
-  //       // Tandai bahwa toast sudah ditampilkan
-  //       sessionStorage.setItem("toastDisplayed", "true")
-  //       toastShown.current = true
-        
-  //       // Tampilkan toast welcome
-  //       const hasVisitedBefore = localStorage.getItem("hasVisitedDashboard")
-  //       if (!hasVisitedBefore) {
-  //         // User belum pernah mengunjungi dashboard sebelumnya
-  //         localStorage.setItem("hasVisitedDashboard", "true")
-  //         toast.message("Login Berhasil!", {
-  //           description: "Selamat Datang!",
-  //           id: "welcome-toast"
-  //         })
-  //       } else {
-  //         // User pernah mengunjungi dashboard sebelumnya
-  //         toast.message("Login Berhasil!", {
-  //           description: "Selamat Datang Kembali!",
-  //           id: "welcome-back-toast"
-  //         })
-  //       }
-  //     }
-  //   }
-    
-  //   return () => {
-  //     // Reset toastShown saat komponen di-unmount
-  //     toastShown.current = false
-  //   }
-  // }, [isAuthenticated, user])
+  // Check session validity when component mounts and when pathname changes
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      checkSession()
+    }
+  }, [isAuthenticated, user, pathname, checkSession])
+
 
   // Function to get page title based on pathname using sidebar menu data
   const getPageTitle = () => {
