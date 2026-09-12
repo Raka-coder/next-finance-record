@@ -1,11 +1,15 @@
 "use client"
 
 import { useMemo } from "react"
+import Link from "next/link"
 import type { Transaction } from "@/interfaces/transaction-interface"
 import { SummaryCards } from "./financial-summary/summary-cards"
 import { PieChartsSection } from "./financial-summary/pie-charts-section"
 import { CategoryBreakdown } from "./financial-summary/category-breakdown"
 import { RecentTransactionsCard } from "./financial-summary/recent-transactions-card"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Plus, ReceiptText } from "lucide-react"
 
 interface FinancialSummaryProps {
   transactions: Transaction[]
@@ -23,7 +27,6 @@ export function FinancialSummary({ transactions }: FinancialSummaryProps) {
   }, [])
 
   const financialData = useMemo(() => {
-    // Handle case when transactions is null or undefined
     if (!transactions || transactions.length === 0) {
       return {
         topExpenseCategories: [],
@@ -31,11 +34,10 @@ export function FinancialSummary({ transactions }: FinancialSummaryProps) {
         expensePieData: [],
         incomePieData: [],
         totalIncome: 0,
-        totalExpense: 0
+        totalExpense: 0,
       }
     }
 
-    // Kategori pengeluaran terbesar
     const expensesByCategory = transactions
       .filter((t) => t.type === "expense")
       .reduce(
@@ -50,7 +52,6 @@ export function FinancialSummary({ transactions }: FinancialSummaryProps) {
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
 
-    // Kategori pemasukan terbesar
     const incomesByCategory = transactions
       .filter((t) => t.type === "income")
       .reduce(
@@ -65,7 +66,6 @@ export function FinancialSummary({ transactions }: FinancialSummaryProps) {
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
 
-    // Prepare data for pie charts
     const expensePieData = Object.entries(expensesByCategory).map(([category, amount]) => ({
       name: category,
       y: amount,
@@ -90,22 +90,48 @@ export function FinancialSummary({ transactions }: FinancialSummaryProps) {
       expensePieData,
       incomePieData,
       totalIncome,
-      totalExpense
+      totalExpense,
     }
   }, [transactions])
 
-  // Handle case when transactions is null or undefined
   if (!transactions) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div>Loading transactions...</div>
+        <div className="text-sm text-muted-foreground animate-pulse">Memuat ringkasan keuangan...</div>
+      </div>
+    )
+  }
+
+  // Composed Onboarding Empty State when user has 0 transactions
+  if (transactions.length === 0) {
+    return (
+      <div className="space-y-6">
+        <SummaryCards transactions={transactions} formatCurrency={formatCurrency} />
+
+        <Card className="border-dashed border-2 bg-card/40 backdrop-blur-sm">
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center px-4">
+            <div className="size-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 shadow-sm">
+              <ReceiptText className="size-7" />
+            </div>
+            <h3 className="text-xl font-bold tracking-tight">Belum Ada Transaksi Tercatat</h3>
+            <p className="text-muted-foreground text-sm max-w-md mt-1 mb-6">
+              Mulai kelola keuangan Anda dengan mencatat pemasukan gaji, usaha, atau pengeluaran harian pertama Anda sekarang.
+            </p>
+            <Button asChild size="lg" className="font-semibold shadow-sm">
+              <Link href="/dashboard/add-transaction" className="inline-flex items-center gap-2">
+                <Plus className="size-4" />
+                Catat Transaksi Pertama
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
+      {/* Bento Summary Cards */}
       <SummaryCards transactions={transactions} formatCurrency={formatCurrency} />
 
       {/* Pie Charts Section */}
