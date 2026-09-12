@@ -12,16 +12,12 @@ import { TransactionStats } from "./transaction-list/transaction-stats"
 import { TransactionTable } from "./transaction-list/transaction-table"
 import { EditTransactionDialog } from "./transaction-list/edit-transaction-dialog"
 import { TransactionPagination } from "./transaction-list/transaction-pagination"
-import { AddTransactionDialog } from "./transaction/add-transaction-dialog"
 import type { EditTransactionFormValues } from "@/validation/schemas/edit-transaction"
 
 interface TransactionListProps {
   transactions: Transaction[]
   onUpdateTransaction: (id: string, transaction: Omit<Transaction, "id">) => void
   onDeleteTransaction: (id: string) => void
-  onAddTransaction?: (
-    transaction: Omit<Transaction, "id" | "user_id" | "created_at" | "updated_at">
-  ) => Promise<Transaction>
 }
 
 const incomeCategories = ["Gaji", "Freelance", "Investasi", "Bonus", "Lainnya"]
@@ -39,7 +35,6 @@ export function TransactionList({
   transactions,
   onUpdateTransaction,
   onDeleteTransaction,
-  onAddTransaction,
 }: TransactionListProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -47,7 +42,6 @@ export function TransactionList({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteLoading, setDeleteLoading] = useState(false)
-  const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   // Helper functions
   const formatWeekRange = useCallback((weekStart: Date, weekEnd: Date) => {
@@ -270,7 +264,6 @@ export function TransactionList({
           currentPage={currentPage}
           currentPageLabel={currentPageData?.label}
           shouldShowPagination={shouldShowPagination}
-          onOpenAddTransaction={onAddTransaction ? () => setAddDialogOpen(true) : undefined}
         />
         
         <CardContent>
@@ -323,14 +316,6 @@ export function TransactionList({
           />
         </CardContent>
       </Card>
-
-      {onAddTransaction && (
-        <AddTransactionDialog
-          open={addDialogOpen}
-          onOpenChange={setAddDialogOpen}
-          onAddTransaction={onAddTransaction}
-        />
-      )}
     </div>
   )
 }

@@ -99,10 +99,6 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
     }
   }, [transactions])
 
-  const handleOpenDialog = () => {
-    setAddDialogOpen(true)
-  }
-
   if (!transactions) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -113,7 +109,7 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
 
   return (
     <div className="space-y-6">
-      {/* Header action row for mobile and top dashboard */}
+      {/* Satu-satunya tombol aksi utama berada di header dashboard */}
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Ringkasan Keuangan</h1>
@@ -124,7 +120,7 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
 
         {onAddTransaction && (
           <Button
-            onClick={handleOpenDialog}
+            onClick={() => setAddDialogOpen(true)}
             className="shrink-0 font-semibold gap-2 shadow-sm cursor-pointer"
           >
             <Plus className="size-4" />
@@ -134,7 +130,7 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
         )}
       </div>
 
-      {/* Modal Dialog for Add Transaction */}
+      {/* Modal Dialog Form Transaksi */}
       {onAddTransaction && (
         <AddTransactionDialog
           open={addDialogOpen}
@@ -143,13 +139,12 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
         />
       )}
 
-      {/* Empty State when 0 transactions */}
+      {/* Empty State jika belum ada transaksi */}
       {transactions.length === 0 ? (
         <div className="space-y-6">
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
-            onOpenAddTransaction={onAddTransaction ? handleOpenDialog : undefined}
           />
 
           <Card className="border-dashed border-2 bg-card/40 backdrop-blur-sm">
@@ -162,7 +157,7 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
                 Mulai kelola keuangan Anda dengan mencatat pemasukan gaji, usaha, atau pengeluaran harian pertama Anda sekarang.
               </p>
               {onAddTransaction && (
-                <Button size="lg" onClick={handleOpenDialog} className="font-semibold shadow-sm cursor-pointer">
+                <Button size="lg" onClick={() => setAddDialogOpen(true)} className="font-semibold shadow-sm cursor-pointer">
                   <Plus className="size-4 mr-2" />
                   Catat Transaksi Pertama
                 </Button>
@@ -176,7 +171,6 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
-            onOpenAddTransaction={onAddTransaction ? handleOpenDialog : undefined}
           />
 
           {/* Pie Charts Section */}
@@ -198,7 +192,6 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
           <RecentTransactionsCard
             transactions={transactions}
             formatCurrency={formatCurrency}
-            onOpenAddTransaction={onAddTransaction ? handleOpenDialog : undefined}
           />
         </>
       )}

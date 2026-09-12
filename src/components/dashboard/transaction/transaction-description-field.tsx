@@ -15,15 +15,19 @@ export function TransactionDescriptionField({ control }: TransactionDescriptionF
       control={control}
       name="description"
       render={({ field }) => (
-        <FormItem className="space-y-2">
-          <FormLabel>Deskripsi</FormLabel>
+        <FormItem className="space-y-1.5">
+          <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Deskripsi / Catatan
+          </FormLabel>
           <FormControl>
             <Textarea
-              placeholder="Masukkan deskripsi transaksi..."
+              placeholder="Contoh: Makan siang nasi padang, Gaji bulanan, dll."
+              rows={2}
+              className="resize-none rounded-xl border-border/70 text-sm"
               {...field}
             />
           </FormControl>
-          <FormMessage className="-mt-2" />
+          <FormMessage className="text-xs" />
         </FormItem>
       )}
     />

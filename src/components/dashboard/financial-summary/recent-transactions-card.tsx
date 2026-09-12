@@ -1,19 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, TrendingDown, ArrowUpRight, Plus } from "lucide-react"
+import { TrendingUp, TrendingDown, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import type { Transaction } from "@/interfaces/transaction-interface"
 
 interface RecentTransactionsCardProps {
   transactions: Transaction[]
   formatCurrency: (amount: number) => string
-  onOpenAddTransaction?: () => void
 }
 
 export function RecentTransactionsCard({
   transactions,
   formatCurrency,
-  onOpenAddTransaction,
 }: RecentTransactionsCardProps) {
   const recent = transactions.slice(0, 5)
 
@@ -26,26 +24,13 @@ export function RecentTransactionsCard({
             {recent.length > 0 ? "5 aktivitas keuangan terakhir yang tercatat" : "Belum ada transaksi"}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
-          {onOpenAddTransaction && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onOpenAddTransaction}
-              className="text-xs h-8 gap-1.5 font-medium cursor-pointer"
-            >
-              <Plus className="size-3.5" />
-              <span>Tambah</span>
-            </Button>
-          )}
-          {transactions.length > 0 && (
-            <Button asChild variant="ghost" size="sm" className="text-xs h-8 gap-1 font-medium text-muted-foreground hover:text-foreground">
-              <Link href="/dashboard/transaction-lists">
-                Lihat Semua <ArrowUpRight className="size-3.5" />
-              </Link>
-            </Button>
-          )}
-        </div>
+        {transactions.length > 0 && (
+          <Button asChild variant="ghost" size="sm" className="text-xs h-8 gap-1 font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/dashboard/transaction-lists">
+              Lihat Semua <ArrowUpRight className="size-3.5" />
+            </Link>
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
@@ -87,16 +72,10 @@ export function RecentTransactionsCard({
             )
           })}
           {transactions.length === 0 && (
-            <div className="text-center py-10">
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground">
                 Belum ada transaksi tercatat pada akun ini.
               </p>
-              {onOpenAddTransaction && (
-                <Button size="sm" variant="outline" onClick={onOpenAddTransaction} className="inline-flex items-center gap-2">
-                  <Plus className="size-3.5" />
-                  Tambah Transaksi
-                </Button>
-              )}
             </div>
           )}
         </div>
