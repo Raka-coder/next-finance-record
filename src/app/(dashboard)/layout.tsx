@@ -38,6 +38,21 @@ const menuItems = [
     href: "/dashboard/transaction-lists",
   },
   {
+    id: "budgets-goals",
+    title: "Anggaran & Target",
+    href: "/dashboard/budgets-goals",
+  },
+  {
+    id: "recurring",
+    title: "Tagihan Berulang",
+    href: "/dashboard/recurring",
+  },
+  {
+    id: "analytics",
+    title: "Analitik Tren",
+    href: "/dashboard/analytics",
+  },
+  {
     id: "settings",
     title: "Pengaturan",
     href: "/dashboard/settings",

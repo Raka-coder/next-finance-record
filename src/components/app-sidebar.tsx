@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { Wallet, List, BarChart3, SettingsIcon } from "lucide-react"
+import { Wallet, List, BarChart3, SettingsIcon, Target, RefreshCw, TrendingUp } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -27,6 +27,24 @@ const menuItems = [
     title: "Daftar Transaksi",
     icon: List,
     href: "/dashboard/transaction-lists",
+  },
+  {
+    id: "budgets-goals",
+    title: "Anggaran & Target",
+    icon: Target,
+    href: "/dashboard/budgets-goals",
+  },
+  {
+    id: "recurring",
+    title: "Tagihan Berulang",
+    icon: RefreshCw,
+    href: "/dashboard/recurring",
+  },
+  {
+    id: "analytics",
+    title: "Analitik Tren",
+    icon: TrendingUp,
+    href: "/dashboard/analytics",
   },
   {
     id: "settings",
