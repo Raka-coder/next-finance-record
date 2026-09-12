@@ -2,6 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { useFormContext } from "react-hook-form"
 import { LoginFormValues } from "@/validation/schemas/login"
+import { Mail } from "lucide-react"
 
 export function EmailField() {
   const { control } = useFormContext<LoginFormValues>()
@@ -12,9 +13,18 @@ export function EmailField() {
       name="email"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Email</FormLabel>
+          <FormLabel className="text-sm font-medium">Email</FormLabel>
           <FormControl>
-            <Input placeholder="your@email.com" type="email" {...field} />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Input
+                placeholder="nama@email.com"
+                type="email"
+                autoComplete="email"
+                className="pl-9"
+                {...field}
+              />
+            </div>
           </FormControl>
           <FormMessage />
         </FormItem>

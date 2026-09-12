@@ -2,6 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { useFormContext } from "react-hook-form"
 import { RegisterFormValues } from "@/validation/schemas/register"
+import { AtSign } from "lucide-react"
 
 export function UsernameField() {
   const { control } = useFormContext<RegisterFormValues>()
@@ -12,16 +13,19 @@ export function UsernameField() {
       name="username"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Username</FormLabel>
+          <FormLabel className="text-sm font-medium">Username</FormLabel>
           <FormControl>
-            <Input
-              placeholder="username"
-              {...field}
-              onBlur={async () => {
-                field.onBlur()
-                // Validasi akan dilakukan di komponen parent
-              }}
-            />
+            <div className="relative">
+              <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Input
+                placeholder="johndoe"
+                className="pl-9"
+                {...field}
+                onBlur={async () => {
+                  field.onBlur()
+                }}
+              />
+            </div>
           </FormControl>
           <FormMessage />
         </FormItem>

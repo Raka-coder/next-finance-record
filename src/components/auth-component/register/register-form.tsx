@@ -80,11 +80,9 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
     if (error) {
       toast.error(error.message)
     } else {
-      // Cek apakah user sudah terdaftar sebelumnya (Supabase security identity check)
       if (signUpData.user && signUpData.user.identities && signUpData.user.identities.length === 0) {
         toast.error("Email ini sudah terdaftar. Silakan login atau reset password.")
       } else if (signUpData.session) {
-        // Jika "Confirm email" di Supabase Dashboard dinonaktifkan, user langsung login
         toast.success("Registrasi berhasil! Mengalihkan ke dashboard...")
         if (onRegisterSuccess) {
           onRegisterSuccess()
@@ -92,7 +90,6 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
           router.push("/dashboard")
         }
       } else {
-        // Jika "Confirm email" aktif, email konfirmasi dikirim oleh Supabase
         toast.message("Registrasi berhasil! Periksa email Anda untuk link konfirmasi.", {
           description: "Jika tidak ada di Inbox, pastikan periksa folder Spam/Junk.",
         })
@@ -107,7 +104,7 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   return (
     <div className="w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:w-[300px] w-[280px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
           <FullNameField />
           <UsernameField />
           <EmailField />
@@ -117,10 +114,10 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
       </Form>
       {message && (
         <div
-          className={`mt-4 p-3 rounded-md text-sm ${
+          className={`mt-4 p-3 rounded-lg text-sm font-medium ${
             message.includes("error") || message.includes("Error")
-              ? "bg-red-50 text-red-600 border border-red-200"
-              : "bg-green-50 text-green-600 border border-green-200"
+              ? "bg-destructive/10 text-destructive border border-destructive/20"
+              : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
           }`}
         >
           {message}

@@ -1,6 +1,5 @@
 'use client'
 
-// UI components for card layout
 import {
   Card,
   CardContent,
@@ -8,27 +7,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-// Custom footer component for the forgot password card
 import { ForgotPasswordFooter } from './forgot-password/forgot-password-footer'
+import { KeyRound } from 'lucide-react'
 
-// Props interface for the ForgotPasswordCard component
 interface ForgotPasswordCardProps {
-  // Content to be displayed inside the card
   children: React.ReactNode
 }
 
-// Card component that wraps the forgot password form
-// Displays a title, description, form content, and footer
 export function ForgotPasswordCard({ children }: ForgotPasswordCardProps) {
   return (
-    <Card className='max-w-md'>
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Atur Ulang Kata Sandi</CardTitle>
-        <CardDescription className="text-center">
+    <Card className="w-full max-w-[420px] shadow-sm border-border/70">
+      <CardHeader className="text-center pb-4">
+        <div className="flex justify-center mb-3">
+          <div className="flex aspect-square size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-sm">
+            <KeyRound className="size-6 text-primary" />
+          </div>
+        </div>
+        <CardTitle className="text-2xl font-bold tracking-tight">Atur Ulang Kata Sandi</CardTitle>
+        <CardDescription className="text-center text-muted-foreground text-sm">
           Masukkan email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-2">
         {children}
         <ForgotPasswordFooter />
       </CardContent>

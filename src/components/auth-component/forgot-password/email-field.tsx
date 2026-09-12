@@ -1,6 +1,5 @@
 'use client'
 
-// Form components from shadcn/ui for structured form layout
 import {
   FormControl,
   FormField,
@@ -8,23 +7,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-// Input component from shadcn/ui
 import { Input } from '@/components/ui/input'
-// React Hook Form hook for accessing form context
 import { useForm } from 'react-hook-form'
-// Zod library for schema validation
 import * as z from 'zod'
-// Validation schema for the forgot password form
 import { forgotPasswordSchema } from '@/validation/schemas/forgot-password'
+import { Mail } from 'lucide-react'
 
-// Props interface for the EmailField component
 interface EmailFieldProps {
-  // Form instance from react-hook-form with typed schema
   form: ReturnType<typeof useForm<z.infer<typeof forgotPasswordSchema>>>
 }
 
-// Reusable email input field component with validation
-// Integrates with react-hook-form and zod validation
 export function EmailField({ form }: EmailFieldProps) {
   return (
     <FormField
@@ -32,13 +24,18 @@ export function EmailField({ form }: EmailFieldProps) {
       name="email"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Email</FormLabel>
+          <FormLabel className="text-sm font-medium">Email</FormLabel>
           <FormControl>
-            <Input
-              placeholder="your@email.com"
-              type="email"
-              {...field}
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Input
+                placeholder="nama@email.com"
+                type="email"
+                autoComplete="email"
+                className="pl-9"
+                {...field}
+              />
+            </div>
           </FormControl>
           <FormMessage />
         </FormItem>

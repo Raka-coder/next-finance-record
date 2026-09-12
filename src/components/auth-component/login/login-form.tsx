@@ -31,7 +31,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   } = form
 
   const onSubmit = async (data: LoginFormValues) => {
-    // Hapus flag sebelum login untuk memastikan toast menampilkan pesan yang tepat
     localStorage.removeItem('hasVisitedDashboard')
 
     const supabase = createClient()
@@ -56,7 +55,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   return (
     <div className="w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:w-[300px] w-[280px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
           <EmailField />
           <PasswordField />
           <SubmitButton loading={isSubmitting} />
@@ -64,7 +63,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
       </Form>
 
       {form.formState.errors.root && (
-        <div className="mt-4 p-3 rounded-md text-sm bg-red-50 text-red-600 border border-red-200">
+        <div className="mt-4 p-3 rounded-lg text-sm bg-destructive/10 text-destructive border border-destructive/20 font-medium">
           {form.formState.errors.root.message}
         </div>
       )}
