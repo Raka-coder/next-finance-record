@@ -41,12 +41,6 @@ const menuItems = [
     href: "/dashboard/recurring",
   },
   {
-    id: "analytics",
-    title: "Analitik Tren",
-    icon: TrendingUp,
-    href: "/dashboard/analytics",
-  },
-  {
     id: "settings",
     title: "Pengaturan",
     icon: SettingsIcon,

@@ -10,15 +10,25 @@ import { AddTransactionDialog } from "./transaction/add-transaction-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plus, ReceiptText } from "lucide-react"
+import { MomComparisonCards } from "@/components/dashboard/analytics/mom-comparison-cards"
+import { CashflowTrendChart } from "@/components/dashboard/analytics/cashflow-trend-chart"
+import type { MonthOverMonthData, MonthlyTrendPoint } from "@/services/analytics.service"
 
 interface FinancialSummaryProps {
   transactions: Transaction[]
   onAddTransaction?: (
     transaction: Omit<Transaction, "id" | "user_id" | "created_at" | "updated_at">
   ) => Promise<Transaction>
+  momData?: MonthOverMonthData | null
+  sixMonthTrend?: MonthlyTrendPoint[]
 }
 
-export function FinancialSummary({ transactions, onAddTransaction }: FinancialSummaryProps) {
+export function FinancialSummary({
+  transactions,
+  onAddTransaction,
+  momData,
+  sixMonthTrend = [],
+}: FinancialSummaryProps) {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   const formatCurrency = useMemo(() => {
@@ -172,6 +182,28 @@ export function FinancialSummary({ transactions, onAddTransaction }: FinancialSu
             transactions={transactions}
             formatCurrency={formatCurrency}
           />
+
+          {/* Month-over-Month Comparison Analytics */}
+          {momData && (
+            <div className="space-y-2 pt-2">
+              <div>
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Performa Finansial Bulan Ini
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  Perbandingan langsung arus kas bulan berjalan terhadap bulan lalu
+                </p>
+              </div>
+              <MomComparisonCards data={momData} />
+            </div>
+          )}
+
+          {/* 6-Month Cashflow Trend Chart */}
+          {sixMonthTrend && sixMonthTrend.length > 0 && (
+            <div className="pt-2">
+              <CashflowTrendChart data={sixMonthTrend} />
+            </div>
+          )}
 
           {/* Pie Charts Section */}
           <PieChartsSection 

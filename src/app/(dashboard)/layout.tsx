@@ -48,11 +48,6 @@ const menuItems = [
     href: "/dashboard/recurring",
   },
   {
-    id: "analytics",
-    title: "Analitik Tren",
-    href: "/dashboard/analytics",
-  },
-  {
     id: "settings",
     title: "Pengaturan",
     href: "/dashboard/settings",
