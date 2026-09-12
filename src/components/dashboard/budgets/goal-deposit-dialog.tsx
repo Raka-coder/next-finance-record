@@ -52,7 +52,7 @@ export function GoalDepositDialog({ open, onOpenChange, goal, onSuccess }: GoalD
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[380px]">
+      <DialogContent className="sm:max-w-[380px] rounded-2xl">
         <DialogHeader>
           <DialogTitle>Kelola Saldo Target</DialogTitle>
           <DialogDescription>
@@ -61,12 +61,12 @@ export function GoalDepositDialog({ open, onOpenChange, goal, onSuccess }: GoalD
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
-          <div className="flex rounded-lg bg-muted p-1 gap-1">
+          <div className="flex rounded-xl bg-muted/60 p-1 gap-1">
             <button
               type="button"
               onClick={() => setMode("deposit")}
-              className={`flex-1 text-xs py-1.5 font-medium rounded-md transition-all ${
-                mode === "deposit" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+              className={`flex-1 text-xs py-2 font-medium rounded-lg transition-all cursor-pointer ${
+                mode === "deposit" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               + Tambah Tabungan
@@ -74,8 +74,8 @@ export function GoalDepositDialog({ open, onOpenChange, goal, onSuccess }: GoalD
             <button
               type="button"
               onClick={() => setMode("withdraw")}
-              className={`flex-1 text-xs py-1.5 font-medium rounded-md transition-all ${
-                mode === "withdraw" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+              className={`flex-1 text-xs py-2 font-medium rounded-lg transition-all cursor-pointer ${
+                mode === "withdraw" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               - Tarik Alokasi
@@ -90,17 +90,17 @@ export function GoalDepositDialog({ open, onOpenChange, goal, onSuccess }: GoalD
               placeholder="Contoh: 500000"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="font-mono tabular-nums"
+              className="h-10 rounded-xl border-border/70 font-mono tabular-nums"
               min="1"
               required
             />
           </div>
 
-          <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <DialogFooter className="pt-2 gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="rounded-xl h-10">
               Batal
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="rounded-xl h-10">
               {isLoading ? "Memproses..." : mode === "deposit" ? "Simpan Tabungan" : "Tarik Tabungan"}
             </Button>
           </DialogFooter>

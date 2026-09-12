@@ -105,7 +105,7 @@ export function RecurringList({ schedules, isLoading, onRefresh }: RecurringList
     <div className="space-y-6">
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-border/60">
+        <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs">Total Transaksi Rutin</CardDescription>
             <CardTitle className="text-2xl font-bold font-mono tabular-nums">
@@ -119,7 +119,7 @@ export function RecurringList({ schedules, isLoading, onRefresh }: RecurringList
           </CardContent>
         </Card>
 
-        <Card className="border-border/60">
+        <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs">Estimasi Pengeluaran Rutin / Bulan</CardDescription>
             <CardTitle className="text-2xl font-bold font-mono tabular-nums text-rose-500">
@@ -131,13 +131,13 @@ export function RecurringList({ schedules, isLoading, onRefresh }: RecurringList
           </CardContent>
         </Card>
 
-        <Card className="border-border/60 flex flex-col justify-between">
+        <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm flex flex-col justify-between">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs">Tindakan Cepat</CardDescription>
             <CardTitle className="text-base font-semibold">Otomasi Pengeluaran</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button onClick={handleOpenCreate} size="sm" className="w-full gap-1.5">
+            <Button onClick={handleOpenCreate} size="sm" className="w-full gap-1.5 rounded-xl h-9">
               <Plus className="size-4" />
               Tambah Jadwal Baru
             </Button>
@@ -146,7 +146,7 @@ export function RecurringList({ schedules, isLoading, onRefresh }: RecurringList
       </div>
 
       {/* Main Table */}
-      <Card className="border-border/60 shadow-sm">
+      <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div>
             <CardTitle className="text-lg font-medium">Daftar Tagihan & Transaksi Berulang</CardTitle>
@@ -154,7 +154,7 @@ export function RecurringList({ schedules, isLoading, onRefresh }: RecurringList
               Kelola tanggal jatuh tempo dan catat transaksi rutin ke pembukuan.
             </CardDescription>
           </div>
-          <Button onClick={onRefresh} variant="outline" size="sm" className="gap-1.5">
+          <Button onClick={onRefresh} variant="outline" size="sm" className="gap-1.5 rounded-xl h-8">
             <RefreshCw className="size-3.5" />
             Muat Ulang
           </Button>

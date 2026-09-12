@@ -3,15 +3,13 @@
 import { useMemo, useState } from "react"
 import type { Transaction } from "@/interfaces/transaction-interface"
 import { SummaryCards } from "./financial-summary/summary-cards"
-import { PieChartsSection } from "./financial-summary/pie-charts-section"
-import { CategoryBreakdown } from "./financial-summary/category-breakdown"
+import { CategoryAnalysisSection } from "./financial-summary/category-analysis-section"
 import { RecentTransactionsCard } from "./financial-summary/recent-transactions-card"
 import { AddTransactionDialog } from "./transaction/add-transaction-dialog"
+import { CashflowTrendChart } from "@/components/dashboard/analytics/cashflow-trend-chart"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plus, ReceiptText } from "lucide-react"
-import { MomComparisonCards } from "@/components/dashboard/analytics/mom-comparison-cards"
-import { CashflowTrendChart } from "@/components/dashboard/analytics/cashflow-trend-chart"
 import type { MonthOverMonthData, MonthlyTrendPoint } from "@/services/analytics.service"
 
 interface FinancialSummaryProps {
@@ -119,7 +117,7 @@ export function FinancialSummary({
 
   return (
     <div className="space-y-6">
-      {/* Satu-satunya tombol aksi utama berada di header dashboard */}
+      {/* Header Halaman */}
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Ringkasan Keuangan</h1>
@@ -131,11 +129,10 @@ export function FinancialSummary({
         {onAddTransaction && (
           <Button
             onClick={() => setAddDialogOpen(true)}
-            className="shrink-0 font-semibold gap-2 shadow-sm cursor-pointer"
+            className="shrink-0 font-semibold gap-2 shadow-sm rounded-xl h-10 cursor-pointer"
           >
             <Plus className="size-4" />
-            <span className="hidden sm:inline">Tambah Transaksi</span>
-            <span className="sm:hidden">Catat</span>
+            <span>Catat Transaksi</span>
           </Button>
         )}
       </div>
@@ -155,9 +152,10 @@ export function FinancialSummary({
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
+            momData={momData}
           />
 
-          <Card className="border-dashed border-2 bg-card/40 backdrop-blur-sm">
+          <Card className="border-dashed border-2 bg-card/40 backdrop-blur-sm rounded-2xl">
             <CardContent className="flex flex-col items-center justify-center py-16 text-center px-4">
               <div className="size-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 shadow-sm">
                 <ReceiptText className="size-7" />
@@ -167,7 +165,7 @@ export function FinancialSummary({
                 Mulai kelola keuangan Anda dengan mencatat pemasukan gaji, usaha, atau pengeluaran harian pertama Anda sekarang.
               </p>
               {onAddTransaction && (
-                <Button size="lg" onClick={() => setAddDialogOpen(true)} className="font-semibold shadow-sm cursor-pointer">
+                <Button size="lg" onClick={() => setAddDialogOpen(true)} className="font-semibold shadow-sm rounded-xl h-11 cursor-pointer">
                   <Plus className="size-4 mr-2" />
                   Catat Transaksi Pertama
                 </Button>
@@ -177,50 +175,30 @@ export function FinancialSummary({
         </div>
       ) : (
         <>
-          {/* Bento Summary Cards */}
+          {/* 1. Bento Summary Cards (Integrated with MoM deltas) */}
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
+            momData={momData}
           />
 
-          {/* Month-over-Month Comparison Analytics */}
-          {momData && (
-            <div className="space-y-2 pt-2">
-              <div>
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Performa Finansial Bulan Ini
-                </h2>
-                <p className="text-xs text-muted-foreground">
-                  Perbandingan langsung arus kas bulan berjalan terhadap bulan lalu
-                </p>
-              </div>
-              <MomComparisonCards data={momData} />
-            </div>
-          )}
-
-          {/* 6-Month Cashflow Trend Chart */}
+          {/* 2. Tren Arus Kas Multi-Bulan */}
           {sixMonthTrend && sixMonthTrend.length > 0 && (
-            <div className="pt-2">
-              <CashflowTrendChart data={sixMonthTrend} />
-            </div>
+            <CashflowTrendChart data={sixMonthTrend} />
           )}
 
-          {/* Pie Charts Section */}
-          <PieChartsSection 
-            incomePieData={financialData.incomePieData} 
-            expensePieData={financialData.expensePieData} 
-          />
-
-          {/* Category Breakdown */}
-          <CategoryBreakdown 
+          {/* 3. Distribusi & Analisis Kategori Terpadu (Menggantikan PieChart + Breakdown terpisah) */}
+          <CategoryAnalysisSection
             topExpenseCategories={financialData.topExpenseCategories}
             topIncomeCategories={financialData.topIncomeCategories}
+            expensePieData={financialData.expensePieData}
+            incomePieData={financialData.incomePieData}
             totalExpense={financialData.totalExpense}
             totalIncome={financialData.totalIncome}
             formatCurrency={formatCurrency}
           />
 
-          {/* Recent Transactions */}
+          {/* 4. Riwayat Transaksi Terbaru */}
           <RecentTransactionsCard
             transactions={transactions}
             formatCurrency={formatCurrency}

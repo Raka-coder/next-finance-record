@@ -65,7 +65,7 @@ export function BudgetFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] rounded-2xl">
         <DialogHeader>
           <DialogTitle>{existingCategory ? "Ubah Anggaran" : "Atur Batas Anggaran"}</DialogTitle>
           <DialogDescription>
@@ -76,12 +76,12 @@ export function BudgetFormDialog({
           <div className="space-y-2">
             <Label htmlFor="category">Kategori Pengeluaran</Label>
             <Select value={category} onValueChange={setCategory} disabled={!!existingCategory}>
-              <SelectTrigger id="category">
+              <SelectTrigger id="category" className="h-10 rounded-xl border-border/70">
                 <SelectValue placeholder="Pilih kategori" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 {expenseCategories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
+                  <SelectItem key={cat} value={cat} className="cursor-pointer rounded-lg">
                     {cat}
                   </SelectItem>
                 ))}
@@ -97,17 +97,17 @@ export function BudgetFormDialog({
               placeholder="Contoh: 1500000"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="font-mono tabular-nums"
+              className="h-10 rounded-xl border-border/70 font-mono tabular-nums"
               min="1"
               required
             />
           </div>
 
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <DialogFooter className="pt-4 gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="rounded-xl h-10">
               Batal
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="rounded-xl h-10">
               {isLoading ? "Menyimpan..." : "Simpan Anggaran"}
             </Button>
           </DialogFooter>

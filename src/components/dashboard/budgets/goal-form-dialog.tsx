@@ -69,7 +69,7 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] rounded-2xl">
         <DialogHeader>
           <DialogTitle>{existingGoal ? "Ubah Target Tabungan" : "Buat Target Tabungan Baru"}</DialogTitle>
           <DialogDescription>
@@ -85,6 +85,7 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
               placeholder="Contoh: Dana Darurat 6 Bulan"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="h-10 rounded-xl border-border/70"
               required
             />
           </div>
@@ -97,7 +98,7 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
               placeholder="Contoh: 15000000"
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
-              className="font-mono tabular-nums"
+              className="h-10 rounded-xl border-border/70 font-mono tabular-nums"
               min="1"
               required
             />
@@ -112,7 +113,7 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
                 placeholder="Contoh: 2000000"
                 value={currentAmount}
                 onChange={(e) => setCurrentAmount(e.target.value)}
-                className="font-mono tabular-nums"
+                className="h-10 rounded-xl border-border/70 font-mono tabular-nums"
                 min="0"
               />
             </div>
@@ -125,6 +126,7 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
               type="date"
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
+              className="h-10 rounded-xl border-border/70"
             />
           </div>
 
@@ -145,11 +147,11 @@ export function GoalFormDialog({ open, onOpenChange, existingGoal, onSuccess }: 
             </div>
           </div>
 
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <DialogFooter className="pt-4 gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="rounded-xl h-10">
               Batal
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="rounded-xl h-10">
               {isLoading ? "Menyimpan..." : "Simpan Target"}
             </Button>
           </DialogFooter>

@@ -62,10 +62,10 @@ export function RecurringDueBanner({ onTransactionExecuted }: RecurringDueBanner
   }
 
   return (
-    <Alert className="border-amber-500/40 bg-amber-500/10 text-foreground relative overflow-hidden shadow-sm">
+    <Alert className="border-amber-500/30 bg-amber-500/10 text-foreground relative overflow-hidden rounded-2xl shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="size-9 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+          <div className="size-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
             <BellRing className="size-5 animate-bounce" />
           </div>
           <div className="space-y-1">
@@ -73,7 +73,7 @@ export function RecurringDueBanner({ onTransactionExecuted }: RecurringDueBanner
               <AlertTitle className="text-base font-semibold text-amber-900 dark:text-amber-200">
                 Pengingat Tagihan & Transaksi Jatuh Tempo
               </AlertTitle>
-              <Badge className="bg-amber-500 text-amber-950 font-bold text-xs py-0">
+              <Badge className="bg-amber-500 text-amber-950 font-bold text-xs py-0 rounded-full">
                 {dueSchedules.length} Perlu Dicatat
               </Badge>
             </div>
@@ -85,7 +85,7 @@ export function RecurringDueBanner({ onTransactionExecuted }: RecurringDueBanner
 
         <button
           onClick={() => setIsDismissed(true)}
-          className="text-xs text-muted-foreground hover:text-foreground self-end md:self-center absolute top-2 right-2 md:static"
+          className="text-xs text-muted-foreground hover:text-foreground self-end md:self-center absolute top-2 right-2 md:static cursor-pointer"
         >
           Tutup ✕
         </button>
@@ -96,7 +96,7 @@ export function RecurringDueBanner({ onTransactionExecuted }: RecurringDueBanner
         {dueSchedules.map((schedule) => (
           <div
             key={schedule.id}
-            className="flex items-center justify-between gap-2 p-2.5 rounded-md bg-background/80 border border-amber-500/30 shadow-xs"
+            className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-card/90 border border-amber-500/30 shadow-xs"
           >
             <div className="min-w-0">
               <p className="font-semibold text-xs truncate text-foreground">{schedule.description}</p>
@@ -108,7 +108,7 @@ export function RecurringDueBanner({ onTransactionExecuted }: RecurringDueBanner
 
             <Button
               size="sm"
-              className="h-7 text-xs gap-1 shrink-0 bg-amber-600 hover:bg-amber-700 text-white"
+              className="h-8 text-xs gap-1 shrink-0 bg-amber-600 hover:bg-amber-700 text-white rounded-lg cursor-pointer"
               disabled={processingId === schedule.id}
               onClick={() => handleExecute(schedule)}
             >

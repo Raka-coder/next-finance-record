@@ -92,7 +92,7 @@ export function RecurringFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px]">
+      <DialogContent className="sm:max-w-[480px] rounded-2xl">
         <DialogHeader>
           <DialogTitle>{existingSchedule ? "Ubah Jadwal Transaksi" : "Tambah Transaksi Berulang"}</DialogTitle>
           <DialogDescription>
@@ -135,6 +135,7 @@ export function RecurringFormDialog({
               placeholder="Contoh: Tagihan WiFi Indihome, Netflix, Gaji Kantor"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="h-10 rounded-xl border-border/70"
               required
             />
           </div>
@@ -149,7 +150,7 @@ export function RecurringFormDialog({
                 placeholder="Contoh: 350000"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="font-mono tabular-nums"
+                className="h-10 rounded-xl border-border/70 font-mono tabular-nums"
                 min="1"
                 required
               />
@@ -159,12 +160,12 @@ export function RecurringFormDialog({
             <div className="space-y-2">
               <Label htmlFor="category">Kategori</Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger id="category">
+                <SelectTrigger id="category" className="h-10 rounded-xl border-border/70">
                   <SelectValue placeholder="Pilih kategori" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {categories.map((c) => (
-                    <SelectItem key={c} value={c}>
+                    <SelectItem key={c} value={c} className="rounded-lg">
                       {c}
                     </SelectItem>
                   ))}
@@ -181,14 +182,14 @@ export function RecurringFormDialog({
                 value={frequency}
                 onValueChange={(val) => setFrequency(val as RecurringFrequency)}
               >
-                <SelectTrigger id="frequency">
+                <SelectTrigger id="frequency" className="h-10 rounded-xl border-border/70">
                   <SelectValue placeholder="Pilih frekuensi" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="daily">Harian</SelectItem>
-                  <SelectItem value="weekly">Mingguan</SelectItem>
-                  <SelectItem value="monthly">Bulanan</SelectItem>
-                  <SelectItem value="yearly">Tahunan</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="daily" className="rounded-lg">Harian</SelectItem>
+                  <SelectItem value="weekly" className="rounded-lg">Mingguan</SelectItem>
+                  <SelectItem value="monthly" className="rounded-lg">Bulanan</SelectItem>
+                  <SelectItem value="yearly" className="rounded-lg">Tahunan</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -201,16 +202,17 @@ export function RecurringFormDialog({
                 type="date"
                 value={nextDueDate}
                 onChange={(e) => setNextDueDate(e.target.value)}
+                className="h-10 rounded-xl border-border/70"
                 required
               />
             </div>
           </div>
 
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <DialogFooter className="pt-4 gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="rounded-xl h-10">
               Batal
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="rounded-xl h-10">
               {isLoading ? "Menyimpan..." : "Simpan Jadwal"}
             </Button>
           </DialogFooter>

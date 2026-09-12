@@ -117,10 +117,10 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
   }, [theme, data])
 
   return (
-    <Card className="border-border/60 shadow-sm">
+    <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Tren Arus Kas 6 Bulan Terakhir</CardTitle>
-        <CardDescription className="text-xs">
+        <CardDescription className="text-xs text-muted-foreground">
           Perbandingan historis total pemasukan dan pengeluaran tiap bulan.
         </CardDescription>
       </CardHeader>

@@ -67,7 +67,7 @@ export function GoalList({ goals, isLoading, onRefresh }: GoalListProps) {
             Lacak kemajuan tabungan Anda untuk masa depan yang lebih terencana.
           </p>
         </div>
-        <Button onClick={handleOpenCreate} size="sm" className="gap-1.5 self-start sm:self-auto">
+        <Button onClick={handleOpenCreate} size="sm" className="gap-1.5 self-start sm:self-auto rounded-xl h-9">
           <Plus className="size-4" />
           Buat Target Baru
         </Button>
@@ -76,16 +76,16 @@ export function GoalList({ goals, isLoading, onRefresh }: GoalListProps) {
       {isLoading ? (
         <div className="py-12 text-center text-muted-foreground">Memuat data target tabungan...</div>
       ) : goals.length === 0 ? (
-        <Card className="border-dashed py-12 text-center">
+        <Card className="border-dashed border-2 rounded-2xl py-12 text-center">
           <CardContent className="space-y-3">
-            <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center">
+            <div className="mx-auto size-12 rounded-xl bg-muted flex items-center justify-center">
               <Target className="size-6 text-muted-foreground" />
             </div>
             <h3 className="font-semibold text-lg">Belum Ada Target Tabungan</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               Miliki tujuan finansial yang jelas seperti tabungan rumah, dana darurat, atau liburan keluarga.
             </p>
-            <Button onClick={handleOpenCreate} variant="outline" className="mt-2">
+            <Button onClick={handleOpenCreate} variant="outline" className="mt-2 rounded-xl">
               Tambah Target Pertama
             </Button>
           </CardContent>
@@ -101,7 +101,7 @@ export function GoalList({ goals, isLoading, onRefresh }: GoalListProps) {
             return (
               <Card
                 key={goal.id}
-                className="relative overflow-hidden border border-border/60 hover:border-border transition-all flex flex-col justify-between shadow-sm"
+                className="relative overflow-hidden rounded-2xl border border-border/70 bg-card/75 backdrop-blur-sm hover:border-border transition-all flex flex-col justify-between shadow-sm"
               >
                 {/* Accent indicator stripe */}
                 <div
@@ -115,7 +115,7 @@ export function GoalList({ goals, isLoading, onRefresh }: GoalListProps) {
                       <CardTitle className="text-lg font-semibold flex items-center gap-2">
                         {goal.name}
                         {isCompleted && (
-                          <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1 text-[11px] py-0">
+                          <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1 text-[11px] py-0 rounded-full">
                             <CheckCircle2 className="size-3" /> Tercapai
                           </Badge>
                         )}
@@ -179,7 +179,7 @@ export function GoalList({ goals, isLoading, onRefresh }: GoalListProps) {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="gap-1 text-xs h-8"
+                      className="gap-1 text-xs h-8 rounded-xl"
                       onClick={() => handleOpenDeposit(goal)}
                     >
                       <ArrowUpRight className="size-3.5" />

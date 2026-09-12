@@ -16,7 +16,7 @@ export function RecentTransactionsCard({
   const recent = transactions.slice(0, 5)
 
   return (
-    <Card className="bg-card/70 backdrop-blur-sm border-border/80 shadow-sm">
+    <Card className="bg-card/75 backdrop-blur-sm border-border/70 rounded-2xl shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-base font-bold tracking-tight">Transaksi Terbaru</CardTitle>
