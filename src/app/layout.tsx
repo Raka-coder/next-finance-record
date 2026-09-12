@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
+import { Rubik, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/providers/theme/theme-provider";
@@ -7,6 +7,11 @@ import { generateMetadata } from "@/lib/metadata";
 
 const rubikSans = Rubik({
   variable: "--font-rubik-sans",
+  subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -26,7 +31,7 @@ export default function RootLayout({
         <link rel="icon" href="/wallet.svg" type="image/svg+xml" />
       </head>
       <body
-        className={`${rubikSans.variable} antialiased`}
+        className={`${rubikSans.variable} ${jetbrainsMono.variable} font-sans antialiased selection:bg-primary/10 selection:text-primary`}
       >
         <ThemeProvider
           attribute="class"
