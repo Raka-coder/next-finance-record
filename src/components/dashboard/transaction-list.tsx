@@ -12,12 +12,16 @@ import { TransactionStats } from "./transaction-list/transaction-stats"
 import { TransactionTable } from "./transaction-list/transaction-table"
 import { EditTransactionDialog } from "./transaction-list/edit-transaction-dialog"
 import { TransactionPagination } from "./transaction-list/transaction-pagination"
+import { AddTransactionDialog } from "./transaction/add-transaction-dialog"
 import type { EditTransactionFormValues } from "@/validation/schemas/edit-transaction"
 
 interface TransactionListProps {
   transactions: Transaction[]
   onUpdateTransaction: (id: string, transaction: Omit<Transaction, "id">) => void
   onDeleteTransaction: (id: string) => void
+  onAddTransaction?: (
+    transaction: Omit<Transaction, "id" | "user_id" | "created_at" | "updated_at">
+  ) => Promise<Transaction>
 }
 
 const incomeCategories = ["Gaji", "Freelance", "Investasi", "Bonus", "Lainnya"]
@@ -31,27 +35,30 @@ interface WeekGroup {
   label: string
 }
 
-export function TransactionList({ transactions, onUpdateTransaction, onDeleteTransaction }: TransactionListProps) {
+export function TransactionList({
+  transactions,
+  onUpdateTransaction,
+  onDeleteTransaction,
+  onAddTransaction,
+}: TransactionListProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   // Helper functions
   const formatWeekRange = useCallback((weekStart: Date, weekEnd: Date) => {
-    // If same date, show single date
     if (format(weekStart, 'yyyy-MM-dd') === format(weekEnd, 'yyyy-MM-dd')) {
       return format(weekStart, 'dd MMM yyyy', { locale: id })
     }
 
-    // If same month, show "1-7 Jan 2024"
     if (format(weekStart, 'yyyy-MM') === format(weekEnd, 'yyyy-MM')) {
       return `${format(weekStart, 'dd', { locale: id })}-${format(weekEnd, 'dd MMM yyyy', { locale: id })}`
     }
 
-    // If different months, show "28 Jan - 3 Feb 2024"
     return `${format(weekStart, 'dd MMM', { locale: id })} - ${format(weekEnd, 'dd MMM yyyy', { locale: id })}`
   }, [])
 
@@ -84,12 +91,10 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
   const weekGroups = useMemo(() => {
     if (filteredTransactions.length === 0) return []
 
-    // Sort transactions by date (newest first)
     const sortedTransactions = [...filteredTransactions].sort((a, b) =>
       new Date(b.date).getTime() - new Date(a.date).getTime()
     )
 
-    // Get the date range
     const oldestDate = startOfDay(parseISO(sortedTransactions[sortedTransactions.length - 1].date))
     const newestDate = startOfDay(parseISO(sortedTransactions[0].date))
 
@@ -97,17 +102,14 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
     let currentStart = oldestDate
     let weekNumber = 1
 
-    // Create 7-day groups starting from the oldest transaction date
     while (currentStart <= newestDate) {
       const currentEnd = endOfDay(addDays(currentStart, 6))
 
-      // Find transactions in this 7-day period
       const weekTransactions = sortedTransactions.filter((transaction) => {
         const transactionDate = startOfDay(parseISO(transaction.date))
         return transactionDate >= currentStart && transactionDate <= currentEnd
       })
 
-      // Only create group if there are transactions in this period
       if (weekTransactions.length > 0) {
         const actualStart = startOfDay(parseISO(weekTransactions[weekTransactions.length - 1].date))
         const actualEnd = startOfDay(parseISO(weekTransactions[0].date))
@@ -122,26 +124,22 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
         weekNumber++
       }
 
-      // Move to next 7-day period
       currentStart = addDays(currentStart, 7)
     }
 
-    return groups.reverse() // Show newest periods first
+    return groups.reverse()
   }, [filteredTransactions, formatWeekRange])
 
   const totalPages = weekGroups.length
   const shouldShowPagination = totalPages > 1
 
-  // Get current page transactions
   const currentPageData = weekGroups[currentPage - 1]
   const currentPageTransactions = currentPageData?.transactions || []
 
-  // Reset to first page when search changes
   useEffect(() => {
     setCurrentPage(1)
   }, [searchTerm])
 
-  // Adjust current page if it exceeds total pages
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages)
@@ -205,7 +203,6 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
     setCurrentPage(page)
   }, [])
 
-  // Generate page numbers for pagination
   const getPageNumbers = useCallback(() => {
     const pages = []
     const maxVisiblePages = 5
@@ -241,7 +238,6 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
     return pages
   }, [totalPages, currentPage])
 
-  // Calculate page statistics
   const pageStats = useMemo(() => {
     if (!currentPageData) return { income: 0, expense: 0, balance: 0, count: 0 }
 
@@ -274,10 +270,10 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
           currentPage={currentPage}
           currentPageLabel={currentPageData?.label}
           shouldShowPagination={shouldShowPagination}
+          onOpenAddTransaction={onAddTransaction ? () => setAddDialogOpen(true) : undefined}
         />
         
         <CardContent>
-          {/* Page Statistics */}
           {currentPageData && (
             <TransactionStats
               income={pageStats.income}
@@ -317,7 +313,6 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
             />
           </div>
 
-          {/* 7-day Period Pagination - Only show if more than 1 period */}
           <TransactionPagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -328,6 +323,14 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
           />
         </CardContent>
       </Card>
+
+      {onAddTransaction && (
+        <AddTransactionDialog
+          open={addDialogOpen}
+          onOpenChange={setAddDialogOpen}
+          onAddTransaction={onAddTransaction}
+        />
+      )}
     </div>
   )
 }

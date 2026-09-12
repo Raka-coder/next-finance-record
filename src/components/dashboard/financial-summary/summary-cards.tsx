@@ -1,14 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { TrendingUp, TrendingDown, Wallet, PieChart, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { TrendingUp, TrendingDown, Wallet, PieChart, ArrowUpRight, ArrowDownRight, Plus } from "lucide-react"
 import type { Transaction } from "@/interfaces/transaction-interface"
 
 type SummaryCardsProps = {
   transactions: Transaction[]
   formatCurrency: (amount: number) => string
+  onOpenAddTransaction?: () => void
 }
 
-export function SummaryCards({ transactions, formatCurrency }: SummaryCardsProps) {
+export function SummaryCards({ transactions, formatCurrency, onOpenAddTransaction }: SummaryCardsProps) {
   const totalIncome = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0)
@@ -36,8 +38,20 @@ export function SummaryCards({ transactions, formatCurrency }: SummaryCardsProps
               Status akumulasi pemasukan dan pengeluaran
             </p>
           </div>
-          <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-            <Wallet className="size-5" />
+          <div className="flex items-center gap-2">
+            {onOpenAddTransaction && (
+              <Button
+                size="sm"
+                onClick={onOpenAddTransaction}
+                className="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold shadow-xs"
+              >
+                <Plus className="size-3.5" />
+                <span>Catat Transaksi</span>
+              </Button>
+            )}
+            <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <Wallet className="size-5" />
+            </div>
           </div>
         </CardHeader>
         <CardContent className="pt-2">
@@ -107,7 +121,7 @@ export function SummaryCards({ transactions, formatCurrency }: SummaryCardsProps
         </CardContent>
       </Card>
 
-      {/* Rasio Pengeluaran Sub-Card spanning full width on mobile or fitting cleanly */}
+      {/* Rasio Pengeluaran Sub-Card */}
       <div className="lg:col-span-4">
         <div className="bg-muted/40 border border-border/60 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">

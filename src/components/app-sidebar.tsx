@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { Wallet, Plus, List, BarChart3, SettingsIcon } from "lucide-react"
+import { Wallet, List, BarChart3, SettingsIcon } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -21,12 +21,6 @@ const menuItems = [
     title: "Ringkasan Keuangan",
     icon: BarChart3,
     href: "/dashboard",
-  },
-  {
-    id: "add",
-    title: "Tambah Transaksi",
-    icon: Plus,
-    href: "/dashboard/add-transaction",
   },
   {
     id: "list",

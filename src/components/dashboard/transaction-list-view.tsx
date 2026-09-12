@@ -5,7 +5,7 @@ import Loading from "@/components/loading/loading-component"
 import { useTransactions } from "@/hooks/use-transaction"
 
 export function TransactionListView() {
-  const { transactions, loading, error, updateTransaction, deleteTransaction } = useTransactions()
+  const { transactions, loading, error, addTransaction, updateTransaction, deleteTransaction } = useTransactions()
 
   if (loading) {
     return <Loading />
@@ -24,6 +24,7 @@ export function TransactionListView() {
       transactions={transactions}
       onUpdateTransaction={updateTransaction}
       onDeleteTransaction={deleteTransaction}
+      onAddTransaction={addTransaction}
     />
   )
 }

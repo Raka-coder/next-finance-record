@@ -3,7 +3,8 @@
 import React from "react"
 import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search, List, CalendarIcon } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Search, List, CalendarIcon, Plus } from 'lucide-react'
 
 interface TransactionListHeaderProps {
   searchTerm: string
@@ -13,6 +14,7 @@ interface TransactionListHeaderProps {
   currentPage: number
   currentPageLabel?: string
   shouldShowPagination: boolean
+  onOpenAddTransaction?: () => void
 }
 
 export function TransactionListHeader({
@@ -22,23 +24,38 @@ export function TransactionListHeader({
   totalPages,
   currentPage,
   currentPageLabel,
-  shouldShowPagination
+  shouldShowPagination,
+  onOpenAddTransaction,
 }: TransactionListHeaderProps) {
   return (
     <CardHeader>
-      <CardTitle className="flex items-center gap-2">
-        <List className="size-5" />
-        Daftar Transaksi
-      </CardTitle>
-      <CardDescription>
-        Kelola semua transaksi pemasukan dan pengeluaran Anda
-        {shouldShowPagination && (
-          <span className="ml-2 text-sm">
-            ({filteredTransactionsCount} transaksi, {totalPages} periode)
-          </span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <List className="size-5" />
+            Daftar Transaksi
+          </CardTitle>
+          <CardDescription className="mt-1">
+            Kelola semua transaksi pemasukan dan pengeluaran Anda
+            {shouldShowPagination && (
+              <span className="ml-2 text-sm">
+                ({filteredTransactionsCount} transaksi, {totalPages} periode)
+              </span>
+            )}
+          </CardDescription>
+        </div>
+
+        {onOpenAddTransaction && (
+          <Button
+            onClick={onOpenAddTransaction}
+            className="self-start sm:self-auto font-semibold gap-1.5 shadow-sm cursor-pointer"
+          >
+            <Plus className="size-4" />
+            <span>Tambah Transaksi</span>
+          </Button>
         )}
-      </CardDescription>
-      
+      </div>
+
       <div className="flex items-center space-x-2 mt-4">
         <Search className="size-4 text-muted-foreground" />
         <Input

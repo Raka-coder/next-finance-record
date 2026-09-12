@@ -5,7 +5,7 @@ import Loading from "@/components/loading/loading-component"
 import { useTransactions } from "@/hooks/use-transaction"
 
 export function DashboardOverview() {
-  const { transactions, loading, error } = useTransactions()
+  const { transactions, loading, error, addTransaction } = useTransactions()
 
   if (loading) {
     return <Loading />
@@ -19,5 +19,10 @@ export function DashboardOverview() {
     )
   }
 
-  return <FinancialSummary transactions={transactions} />
+  return (
+    <FinancialSummary
+      transactions={transactions}
+      onAddTransaction={addTransaction}
+    />
+  )
 }
