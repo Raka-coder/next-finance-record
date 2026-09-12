@@ -45,26 +45,15 @@ export function DataExportSection({ user }: DataExportSectionProps) {
     endDate: undefined,
   })
 
-  // Load export summary on component mount
-  useEffect(() => {
-    if (user.email) {
-      loadExportSummary()
-    }
-  }, [user.email])
-
   const loadExportSummary = useCallback(async () => {
     if (!user.email) {
-      console.log("No user email available")
       return
     }
 
     try {
       setSummaryLoading(true)
       setSummaryError("")
-      console.log("Loading export summary for:", user.email)
-
       const summary = await ExportService.getExportSummary(user.email)
-      console.log("Export summary loaded:", summary)
       setExportSummary(summary)
     } catch (error) {
       console.error("Failed to load export summary:", error)
@@ -83,6 +72,13 @@ export function DataExportSection({ user }: DataExportSectionProps) {
       setSummaryLoading(false)
     }
   }, [user.email])
+
+  // Load export summary on component mount
+  useEffect(() => {
+    if (user.email) {
+      loadExportSummary()
+    }
+  }, [user.email, loadExportSummary])
 
   const handleExportData = async () => {
     if (!user.email) {

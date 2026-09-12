@@ -3,11 +3,12 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form } from "@/components/ui/form"
-import { supabase } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import { ProfileService } from "@/services/profile.service"
-import { registerFormSchema, RegisterFormValues } from "@/validation/schemas/register"
+import { registerFormSchema, type RegisterFormValues } from "@/validation/schemas/register"
 import { useState } from "react"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 import { FullNameField } from "./full-name-field"
 import { UsernameField } from "./username-field"
 import { EmailField } from "./email-field"
@@ -23,6 +24,8 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
   const [usernameError, setUsernameError] = useState("")
+  const router = useRouter()
+  const supabase = createClient()
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -61,22 +64,41 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
       setLoading(false)
       return
     }
-    const { error } = await supabase.auth.signUp({
+
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
+        emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/confirm` : undefined,
         data: {
           username: data.username,
           full_name: data.fullName,
         },
       },
     })
+
     if (error) {
       toast.error(error.message)
     } else {
-      toast.message("Periksa email Anda untuk link konfirmasi!")
-      if (onRegisterSuccess) {
-        onRegisterSuccess()
+      // Cek apakah user sudah terdaftar sebelumnya (Supabase security identity check)
+      if (signUpData.user && signUpData.user.identities && signUpData.user.identities.length === 0) {
+        toast.error("Email ini sudah terdaftar. Silakan login atau reset password.")
+      } else if (signUpData.session) {
+        // Jika "Confirm email" di Supabase Dashboard dinonaktifkan, user langsung login
+        toast.success("Registrasi berhasil! Mengalihkan ke dashboard...")
+        if (onRegisterSuccess) {
+          onRegisterSuccess()
+        } else {
+          router.push("/dashboard")
+        }
+      } else {
+        // Jika "Confirm email" aktif, email konfirmasi dikirim oleh Supabase
+        toast.message("Registrasi berhasil! Periksa email Anda untuk link konfirmasi.", {
+          description: "Jika tidak ada di Inbox, pastikan periksa folder Spam/Junk.",
+        })
+        if (onRegisterSuccess) {
+          onRegisterSuccess()
+        }
       }
     }
     setLoading(false)

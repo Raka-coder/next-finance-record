@@ -22,6 +22,7 @@ export function generateMetadata({
   const url = `${BASE_URL}${path}`
 
   return {
+    metadataBase: new URL(BASE_URL),
     title: pageTitle,
     description: pageDescription,
     applicationName: APP_NAME,

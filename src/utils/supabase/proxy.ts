@@ -42,47 +42,28 @@ export async function updateSession(request: NextRequest) {
     console.error('Auth error in middleware:', error)
   }
 
-  // Define public paths that don't require authentication
-  const publicPaths = [
-    '/',
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/update-password',
-    '/confirm'
-  ]
-
-  const isPublicPath = publicPaths.some(path => 
-    request.nextUrl.pathname.startsWith(path) || request.nextUrl.pathname === '/'
-  )
+  // Define public path patterns
+  const pathname = request.nextUrl.pathname
+  const publicExactPaths = ['/', '/login', '/register', '/forgot-password', '/update-password', '/confirm']
+  const isPublicPath = 
+    publicExactPaths.includes(pathname) || 
+    pathname.startsWith('/api/') || 
+    pathname.startsWith('/confirm')
 
   // If user is not authenticated and trying to access protected routes, redirect to login
   if ((!user || error) && !isPublicPath) {
-    // no user and not a public path, redirect to login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
   // If user is authenticated and trying to access auth pages, redirect to dashboard
-  if (user && !error && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
+  const isAuthPage = ['/login', '/register', '/forgot-password'].includes(pathname)
+  if (user && !error && isAuthPage) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse
 }

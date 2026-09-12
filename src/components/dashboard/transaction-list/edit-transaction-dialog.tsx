@@ -31,8 +31,8 @@ interface EditTransactionDialogProps {
   onOpenChange: (open: boolean) => void
   transaction: Transaction | null
   onUpdate: (data: EditTransactionFormValues) => void
-  isSubmitting: boolean
-  isFormChanged: boolean
+  isSubmitting?: boolean
+  isFormChanged?: boolean
   categories: string[]
 }
 
@@ -240,7 +240,7 @@ export function EditTransactionDialog({
 
             <Button
               type="submit"
-              disabled={!isFormChanged || isSubmitting}
+              disabled={(isFormChanged !== undefined ? !isFormChanged : !editForm.formState.isDirty) || isSubmitting}
               className="w-full"
             >
               {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}

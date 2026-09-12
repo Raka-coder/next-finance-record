@@ -5,7 +5,7 @@ import * as z from 'zod'
 // Utility function for conditionally joining CSS classes
 import { cn } from '@/lib/utils'
 // Supabase client for authentication operations
-import { supabase } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/client'
 // React hook for managing component state
 import { useState } from 'react'
 // Toast library for displaying notifications
@@ -44,6 +44,7 @@ export function ForgotPasswordForm({ className, ...props }: ForgotPasswordFormPr
       const validatedEmail = forgotPasswordSchema.parse({ email })
       
       // Send password reset email via Supabase
+      const supabase = createClient()
       const { error } = await supabase.auth.resetPasswordForEmail(validatedEmail.email, {
         redirectTo: `${window.location.origin}/update-password`,
       })

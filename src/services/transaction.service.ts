@@ -1,8 +1,13 @@
-import { supabase } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import type { Transaction, TransactionInput } from "@/interfaces/transaction-interface"
 
 export class TransactionService {
+  private static getClient() {
+    return createClient()
+  }
+
   static async getTransactions(): Promise<Transaction[]> {
+    const supabase = this.getClient()
     const { data, error } = await supabase.from("transactions").select("*").order("date", { ascending: false })
 
     if (error) {
@@ -14,6 +19,7 @@ export class TransactionService {
   }
 
   static async addTransaction(transaction: TransactionInput): Promise<Transaction> {
+    const supabase = this.getClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -40,6 +46,7 @@ export class TransactionService {
   }
 
   static async updateTransaction(id: string, transaction: TransactionInput): Promise<Transaction> {
+    const supabase = this.getClient()
     const { data, error } = await supabase.from("transactions").update(transaction).eq("id", id).select().single()
 
     if (error) {
@@ -51,6 +58,7 @@ export class TransactionService {
   }
 
   static async deleteTransaction(id: string): Promise<void> {
+    const supabase = this.getClient()
     const { error } = await supabase.from("transactions").delete().eq("id", id)
 
     if (error) {
@@ -59,3 +67,4 @@ export class TransactionService {
     }
   }
 }
+

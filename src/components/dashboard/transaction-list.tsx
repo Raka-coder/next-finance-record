@@ -155,7 +155,14 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
   const handleUpdate = useCallback(async (data: EditTransactionFormValues) => {
     if (!editingTransaction) return
 
-    if (!isFormChanged) {
+    const isChanged =
+      editingTransaction.type !== data.type ||
+      editingTransaction.amount !== Number.parseFloat(data.amount) ||
+      editingTransaction.description !== data.description ||
+      editingTransaction.category !== data.category ||
+      editingTransaction.date !== format(data.date, "yyyy-MM-dd")
+
+    if (!isChanged) {
       toast.message("Tidak ada perubahan pada transaksi")
       return
     }
@@ -254,32 +261,6 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
     }
   }, [currentPageData])
 
-  // Fungsi untuk membandingkan dua objek transaksi
-  const isTransactionChanged = useCallback((original: Record<string, unknown>, current: Record<string, unknown>): boolean => {
-    // Bandingkan setiap field yang relevan
-    if (original.amount !== current.amount) return true
-    if (original.date !== current.date) return true
-    if (original.category !== current.category) return true
-    if (original.description !== current.description) return true
-    if (original.type !== current.type) return true
-    return false
-  }, [])
-
-  const originalData = editingTransaction ? {
-    ...editingTransaction,
-    amount: editingTransaction.amount.toString(),
-    date: format(new Date(editingTransaction.date), 'yyyy-MM-dd'),
-  } : {}
-
-  const currentData = {
-    type: editingTransaction?.type || "income",
-    amount: editingTransaction?.amount.toString() || "",
-    description: editingTransaction?.description || "",
-    category: editingTransaction?.category || "",
-    date: editingTransaction?.date || new Date().toISOString(),
-  }
-
-  const isFormChanged = isTransactionChanged(originalData, currentData)
   const categories = editingTransaction?.type === "income" ? incomeCategories : expenseCategories
 
   return (
@@ -332,8 +313,6 @@ export function TransactionList({ transactions, onUpdateTransaction, onDeleteTra
               onOpenChange={(open) => !open && setEditingTransaction(null)}
               transaction={editingTransaction}
               onUpdate={handleUpdate}
-              isSubmitting={false}
-              isFormChanged={isFormChanged}
               categories={categories}
             />
           </div>

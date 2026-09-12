@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form } from "@/components/ui/form"
-import { supabase } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import { loginFormSchema, LoginFormValues } from "@/validation/schemas/login"
 import { useRouter } from "next/navigation"
 import { EmailField } from "./email-field"
@@ -34,6 +34,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
     // Hapus flag sebelum login untuk memastikan toast menampilkan pesan yang tepat
     localStorage.removeItem('hasVisitedDashboard')
 
+    const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,

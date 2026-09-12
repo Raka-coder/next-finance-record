@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { ProfileService } from "@/services/profile.service"
-import type { Profile } from "@/interfaces/profile-interface"
+import type { Profile, ProfileUpdateInput } from "@/interfaces/profile-interface"
 
 export function useProfile(userId: string | undefined) {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -18,28 +18,22 @@ export function useProfile(userId: string | undefined) {
     try {
       setLoading(true)
       setError(null)
-      console.log("useProfile: Fetching profile for userId:", userId)
-
       const data = await ProfileService.getProfile(userId)
-      console.log("useProfile: Profile data received:", data)
-
       setProfile(data)
     } catch (err) {
       console.error("useProfile: Error fetching profile:", err)
       setError(err instanceof Error ? err.message : "An error occurred")
-      // Jangan set profile ke null jika ada error, biarkan state sebelumnya
     } finally {
       setLoading(false)
     }
   }, [userId])
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = async (updates: ProfileUpdateInput) => {
     if (!userId) {
       throw new Error("User ID is required")
     }
 
     try {
-      console.log("useProfile: Updating profile:", updates)
       const updatedProfile = await ProfileService.updateProfile(userId, updates)
       if (updatedProfile) {
         setProfile(updatedProfile)

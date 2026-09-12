@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import type { User } from "@supabase/supabase-js"
 import { toast } from "sonner"
 
@@ -13,6 +13,7 @@ export function useAuth() {
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [logoutError, setLogoutError] = useState<string | null>(null)
   const router = useRouter()
+  const supabase = createClient()
 
   // Function to check session validity
   const checkSession = useCallback(async () => {

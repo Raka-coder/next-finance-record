@@ -1,33 +1,13 @@
-"use client"
+import type { Metadata } from "next"
+import { AddTransactionView } from "@/components/dashboard/add-transaction-view"
+import { generateMetadata as getAppMetadata } from "@/lib/metadata"
 
-import { AddTransaction } from "@/components/dashboard/add-transaction"
-import { useTransactions } from "@/hooks/use-transaction"
-import { useRouter } from "next/navigation"
-import { DashboardSEO } from "@/components/dashboard/dashboard-seo"
-import { Transaction } from "@/interfaces/transaction-interface"
+export const metadata: Metadata = getAppMetadata({
+  title: "Tambah Transaksi",
+  description: "Tambahkan transaksi pemasukan atau pengeluaran baru ke dalam catatan keuangan Anda.",
+  path: "/dashboard/add-transaction",
+})
 
 export default function TambahTransaksiPage() {
-  const { addTransaction } = useTransactions()
-  const router = useRouter()
-
-  const handleAddTransaction = async (transaction: Omit<Transaction, "id" | "user_id" | "created_at" | "updated_at">) => {
-    try {
-      const result = await addTransaction(transaction)
-      // Redirect ke daftar transaksi setelah berhasil menambah
-      router.push("/dashboard")
-      return result
-    } catch (error) {
-      throw error
-    }
-  }
-
-  return (
-    <>
-      <DashboardSEO 
-        title="Tambah Transaksi" 
-        description="Tambahkan transaksi pemasukan atau pengeluaran baru ke dalam catatan keuangan Anda."
-      />
-      <AddTransaction onAddTransaction={handleAddTransaction} />
-    </>
-  )
+  return <AddTransactionView />
 }

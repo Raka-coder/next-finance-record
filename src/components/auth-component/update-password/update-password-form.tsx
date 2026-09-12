@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { supabase } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { toast } from 'sonner'
@@ -41,6 +41,7 @@ export function UpdatePasswordForm({ className, onPasswordUpdateSuccess, ...prop
   async function onSubmit(values: z.infer<typeof updatePasswordSchema>) {
     try {
       // Update user password in Supabase
+      const supabase = createClient()
       const { error } = await supabase.auth.updateUser({
         password: values.password,
       })
