@@ -78,7 +78,7 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
     },
     plotOptions: {
       column: {
-        borderRadius: 4,
+        borderRadius: 2,
         pointPadding: 0.15,
         groupPadding: 0.2,
         borderWidth: 0,
@@ -86,9 +86,9 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
     },
     legend: {
       itemStyle: {
-        color: isDark ? "#E2E8F0" : "#334155",
+        color: isDark ? "#A1A1A0" : "#555555",
         fontWeight: "500",
-        fontSize: "12px",
+        fontSize: "11px",
       },
     },
     series: [
@@ -96,13 +96,13 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
         name: "Pemasukan",
         type: "column",
         data: incomeSeries,
-        color: "#10B981", // Emerald
+        color: "#346538",
       },
       {
         name: "Pengeluaran",
         type: "column",
         data: expenseSeries,
-        color: "#F43F5E", // Rose
+        color: "#9F2F2D",
       },
     ],
     credits: {
@@ -117,16 +117,21 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
   }, [theme, data])
 
   return (
-    <Card className="border-border/70 rounded-2xl bg-card/75 backdrop-blur-sm shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Tren Arus Kas 6 Bulan Terakhir</CardTitle>
+    <Card className="border border-border bg-card p-5 gap-0 shadow-none rounded-md">
+      <CardHeader className="p-0 pb-4 space-y-1">
+        <span className="text-[11px] font-mono uppercase tracking-[0.08em] text-muted-foreground">
+          Arus Kas Multi-Bulan
+        </span>
+        <CardTitle className="text-sm font-semibold tracking-tight text-foreground">
+          Tren Arus Kas 6 Bulan Terakhir
+        </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
-          Perbandingan historis total pemasukan dan pengeluaran tiap bulan.
+          Perbandingan historis pemasukan vs pengeluaran tiap bulan
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent className="p-0 pt-3">
         {data.length === 0 ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[260px] flex items-center justify-center font-mono text-xs text-muted-foreground">
             Belum cukup data transaksi untuk menampilkan tren multi-bulan.
           </div>
         ) : (

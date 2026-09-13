@@ -3,7 +3,6 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { type Control, useFormContext } from "react-hook-form"
 import { type TransactionFormValues } from "@/validation/schemas/add-transaction"
-import { TrendingUp, TrendingDown } from "lucide-react"
 
 interface TransactionTypeFieldProps {
   control: Control<TransactionFormValues>
@@ -14,7 +13,6 @@ export function TransactionTypeField({ control }: TransactionTypeFieldProps) {
 
   const handleSelectType = (val: "income" | "expense", onChange: (v: "income" | "expense") => void) => {
     onChange(val)
-    // Otomatis reset kategori jika berganti tipe transaksi agar tidak mismatch
     form.setValue("category", "")
   }
 
@@ -23,40 +21,38 @@ export function TransactionTypeField({ control }: TransactionTypeFieldProps) {
       control={control}
       name="type"
       render={({ field }) => (
-        <FormItem className="space-y-1.5">
-          <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Jenis Transaksi
+        <FormItem className="space-y-1">
+          <FormLabel className="text-[11px] font-mono uppercase tracking-[0.06em] text-muted-foreground">
+            Jenis Pos
           </FormLabel>
           <FormControl>
-            <div className="grid grid-cols-2 gap-2 p-1 bg-muted/50 rounded-xl border border-border/60">
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-secondary border border-border rounded-[4px]">
               <button
                 type="button"
                 onClick={() => handleSelectType("income", field.onChange)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                className={`py-1.5 px-3 rounded-[3px] text-xs font-mono font-medium transition-colors cursor-pointer ${
                   field.value === "income"
-                    ? "bg-background text-emerald-600 dark:text-emerald-400 shadow-xs border border-emerald-500/30"
+                    ? "bg-card text-[#346538] dark:text-[#81C784] border border-border"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <TrendingUp className="size-4" />
-                <span>Pemasukan</span>
+                + Pemasukan
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectType("expense", field.onChange)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                className={`py-1.5 px-3 rounded-[3px] text-xs font-mono font-medium transition-colors cursor-pointer ${
                   field.value === "expense"
-                    ? "bg-background text-rose-600 dark:text-rose-400 shadow-xs border border-rose-500/30"
+                    ? "bg-card text-[#9F2F2D] dark:text-[#F87171] border border-border"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <TrendingDown className="size-4" />
-                <span>Pengeluaran</span>
+                - Pengeluaran
               </button>
             </div>
           </FormControl>
-          <FormMessage className="text-xs" />
+          <FormMessage className="text-[11px]" />
         </FormItem>
       )}
     />

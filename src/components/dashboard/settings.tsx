@@ -1,4 +1,3 @@
-import { SettingsIcon } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
 import type { Profile } from "@/interfaces/profile-interface"
 import { ProfileSettingsCard } from "./settings/profile-settings-card"
@@ -13,17 +12,24 @@ interface SettingsProps {
 
 export function Settings({ user, profile = null }: SettingsProps) {
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-4xl space-y-6">
+      <div className="pb-4 border-b border-border">
+        <div className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1">
+          Preferensi
+        </div>
+        <h1 className="text-2xl font-medium tracking-tight text-foreground">
+          Pengaturan Akun
+        </h1>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Kelola profil pengguna, preferensi visual tema, dan ekspor data pembukuan.
+        </p>
+      </div>
+
       {/* Profile Settings */}
       <ProfileSettingsCard user={user} profile={profile} />
 
-      <div className="grid grid-cols-1  gap-6">
-        {/* Notification Settings */}
-        {/* <NotificationSettingsCard /> */}
-
-        {/* Appearance Settings */}
-        <AppearanceSettingsCard />
-      </div>
+      {/* Appearance Settings */}
+      <AppearanceSettingsCard />
 
       {/* Data Management */}
       <DataManagementCard user={user} />

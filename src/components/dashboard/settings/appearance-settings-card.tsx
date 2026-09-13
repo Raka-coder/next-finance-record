@@ -1,6 +1,5 @@
 "use client"
 
-import { Palette, Sun, Moon, Monitor } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -10,43 +9,36 @@ export function AppearanceSettingsCard() {
   const { theme, setTheme } = useTheme()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Palette className="size-5" />
-          Tampilan
-        </CardTitle>
-        <CardDescription>Sesuaikan tampilan aplikasi</CardDescription>
+    <Card className="border border-border bg-card p-5 gap-0">
+      <CardHeader className="p-0 pb-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-semibold tracking-tight">Preferensi Visual</CardTitle>
+          <span className="text-[11px] font-mono text-muted-foreground uppercase">Tema</span>
+        </div>
+        <CardDescription className="text-xs text-muted-foreground">Sesuaikan skema warna antarmuka (terang, gelap, atau sinkron sistem)</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label>Tema</Label>
+      <CardContent className="p-0 pt-2 space-y-4">
+        <div className="space-y-1">
+          <Label className="text-[11px] font-mono text-muted-foreground uppercase">
+            Mode Tampilan
+          </Label>
           <Select
             value={theme}
             onValueChange={setTheme}
             defaultValue="system"
           >
-            <SelectTrigger className="w-full md:w-[200px]">
+            <SelectTrigger className="w-full md:w-[220px]">
               <SelectValue placeholder="Pilih tema" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light" onClick={() => setTheme("light")}>
-                <div className="flex items-center">
-                  <Sun className="mr-2 mt-0.5 h-4 w-4" />
-                  <span>Terang</span>
-                </div>
+              <SelectItem value="light" className="font-mono text-xs">
+                Terang (Warm Bone)
               </SelectItem>
-              <SelectItem value="dark" onClick={() => setTheme("dark")}>
-                <div className="flex items-center">
-                  <Moon className="mr-2 mt-0.5 h-4 w-4" />
-                  <span>Gelap</span>
-                </div>
+              <SelectItem value="dark" className="font-mono text-xs">
+                Gelap (Obsidian)
               </SelectItem>
-              <SelectItem value="system" onClick={() => setTheme("system")}>
-                <div className="flex items-center">
-                  <Monitor className="mr-2 mt-0.5 h-4 w-4" />
-                  <span>System</span>
-                </div>
+              <SelectItem value="system" className="font-mono text-xs">
+                Sistem Operasi
               </SelectItem>
             </SelectContent>
           </Select>

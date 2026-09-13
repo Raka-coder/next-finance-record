@@ -1,8 +1,6 @@
-// components/theme-toggle.tsx
 "use client"
 
 import * as React from "react"
-import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
@@ -12,12 +10,13 @@ export function ThemeToggle() {
   return (
     <Button
       variant="ghost"
-      size="icon"
+      size="sm"
+      className="h-7 px-2 font-mono text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      aria-label="Ganti mode tampilan"
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
+      <span className="hidden sm:inline">Tema: </span>
+      <span className="capitalize">{theme === "light" ? "Terang" : theme === "dark" ? "Gelap" : "Sistem"}</span>
     </Button>
   )
 }

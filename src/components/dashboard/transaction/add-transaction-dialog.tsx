@@ -4,7 +4,6 @@ import { useState } from "react"
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Plus } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -89,11 +88,11 @@ export function AddTransactionDialog({
         category: "",
         date: format(new Date(), "yyyy-MM-dd"),
       })
-      toast.success("Transaksi berhasil dicatat!")
+      toast.success("Transaksi dicatat")
       setOpen(false)
     } catch (error: unknown) {
       console.error("Error adding transaction:", error)
-      toast.error((error as Error).message || "Gagal mencatat transaksi. Silakan coba lagi.")
+      toast.error((error as Error).message || "Gagal mencatat transaksi.")
     }
   }
 
@@ -101,53 +100,49 @@ export function AddTransactionDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent className="sm:max-w-[460px] w-full p-0 overflow-hidden border-border/80 shadow-lg">
-        {/* Header Dialog yang Rapi dan Bersih */}
-        <div className="p-6 pb-4 border-b bg-muted/20">
-          <DialogHeader className="space-y-1 text-left">
-            <div className="flex items-center gap-2.5">
-              <div className="size-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
-                <Plus className="size-5" />
-              </div>
-              <div>
-                <DialogTitle className="text-lg font-bold tracking-tight">Catat Transaksi</DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground">
-                  Isi detail penerimaan atau pengeluaran keuangan Anda
-                </DialogDescription>
-              </div>
+      <DialogContent className="sm:max-w-[420px] w-full p-6 border border-border bg-card">
+        <DialogHeader className="p-0 pb-4 border-b border-border">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-base font-semibold tracking-tight text-foreground">
+              Catat Transaksi
+            </DialogTitle>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+              Buku Kas
+            </span>
+          </div>
+          <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+            Dokumentasikan penerimaan atau pengeluaran kas baru.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
+            <TransactionTypeField control={form.control} />
+            <TransactionAmountDateFields control={form.control} />
+            <TransactionCategoryField control={form.control} categories={categories} />
+            <TransactionDescriptionField control={form.control} />
+
+            <div className="pt-2 flex items-center justify-end gap-2 border-t border-border mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setOpen(false)}
+                className="font-mono text-xs cursor-pointer"
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={form.formState.isSubmitting}
+                className="font-mono text-xs cursor-pointer"
+              >
+                {form.formState.isSubmitting ? "Menyimpan..." : "Simpan Transaksi"}
+              </Button>
             </div>
-          </DialogHeader>
-        </div>
-
-        {/* Body Form yang Terstruktur Rapi */}
-        <div className="p-6 pt-4 max-h-[80vh] overflow-y-auto">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <TransactionTypeField control={form.control} />
-              <TransactionAmountDateFields control={form.control} />
-              <TransactionCategoryField control={form.control} categories={categories} />
-              <TransactionDescriptionField control={form.control} />
-
-              <div className="pt-2 flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  className="w-1/3 rounded-xl cursor-pointer"
-                >
-                  Batal
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={form.formState.isSubmitting}
-                  className="w-2/3 rounded-xl cursor-pointer font-semibold"
-                >
-                  {form.formState.isSubmitting ? "Menyimpan..." : "Simpan Transaksi"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

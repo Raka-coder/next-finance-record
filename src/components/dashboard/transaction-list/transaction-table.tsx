@@ -3,7 +3,6 @@
 import React from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Edit, Trash2, ArrowUpRight, ArrowDownRight } from "lucide-react"
 import type { Transaction } from "@/interfaces/transaction-interface"
 
 interface TransactionTableProps {
@@ -30,24 +29,24 @@ export function TransactionTable({
   shouldShowPagination,
 }: TransactionTableProps) {
   return (
-    <div className="rounded-xl border border-border/80 overflow-hidden bg-card/60 backdrop-blur-sm shadow-sm">
+    <div className="rounded-[4px] border border-border overflow-hidden bg-card">
       <Table>
-        <TableHeader className="bg-muted/40">
-          <TableRow>
-            <TableHead className="w-[130px] font-semibold">Tanggal</TableHead>
-            <TableHead className="font-semibold">Deskripsi</TableHead>
-            <TableHead className="font-semibold">Kategori</TableHead>
-            <TableHead className="font-semibold">Jenis</TableHead>
-            <TableHead className="text-right font-semibold">Jumlah</TableHead>
-            <TableHead className="text-center w-[100px] font-semibold">Aksi</TableHead>
+        <TableHeader className="bg-secondary/60">
+          <TableRow className="border-border hover:bg-transparent">
+            <TableHead className="w-[120px] font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Tanggal</TableHead>
+            <TableHead className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Deskripsi</TableHead>
+            <TableHead className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Kategori</TableHead>
+            <TableHead className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Jenis</TableHead>
+            <TableHead className="text-right font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Jumlah</TableHead>
+            <TableHead className="text-right w-[110px] font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {transactions.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm">
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={6} className="text-center py-12 text-muted-foreground font-mono text-xs">
                 {filteredTransactionsCount === 0 && searchTerm
-                  ? "Tidak ada transaksi yang cocok dengan pencarian."
+                  ? "Tidak ada transaksi yang cocok dengan kueri pencarian."
                   : shouldShowPagination && currentPageLabel
                     ? `Tidak ada transaksi pada periode ${currentPageLabel}.`
                     : "Belum ada transaksi ditemukan."}
@@ -57,56 +56,54 @@ export function TransactionTable({
             transactions.map((transaction) => {
               const isIncome = transaction.type === "income"
               return (
-                <TableRow key={transaction.id} className="hover:bg-muted/30 transition-colors">
+                <TableRow key={transaction.id} className="border-border hover:bg-muted/30 transition-colors">
                   <TableCell className="text-xs text-muted-foreground font-mono">
                     {formatDate(transaction.date)}
                   </TableCell>
-                  <TableCell className="font-semibold text-foreground text-sm">
+                  <TableCell className="font-medium text-foreground text-xs">
                     {transaction.description}
                   </TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-muted text-muted-foreground border border-border/60">
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[11px] font-mono text-muted-foreground bg-muted/60 border border-border/80">
                       {transaction.category}
                     </span>
                   </TableCell>
                   <TableCell>
                     {isIncome ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                        <ArrowUpRight className="size-3" /> Pemasukan
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide uppercase border border-[#D0E6CD] bg-[#EDF3EC] text-[#346538] dark:border-[#224424] dark:bg-[#1A2E1C] dark:text-[#81C784]">
+                        Pemasukan
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-                        <ArrowDownRight className="size-3" /> Pengeluaran
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide uppercase border border-[#F5C2C7] bg-[#FDEBEC] text-[#9F2F2D] dark:border-[#5C2323] dark:bg-[#321B1B] dark:text-[#F87171]">
+                        Pengeluaran
                       </span>
                     )}
                   </TableCell>
                   <TableCell
-                    className={`text-right font-mono text-sm font-bold tabular-nums ${
-                      isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+                    className={`text-right font-mono text-xs font-medium tabular-nums ${
+                      isIncome ? "text-[#346538] dark:text-[#81C784]" : "text-[#9F2F2D] dark:text-[#F87171]"
                     }`}
                   >
                     {isIncome ? "+" : "-"}
                     {formatCurrency(transaction.amount)}
                   </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-1">
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => onEdit(transaction)}
-                        className="size-8 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        title="Edit transaksi"
+                        className="h-6 px-2 text-[11px] font-mono text-muted-foreground hover:text-foreground"
                       >
-                        <Edit className="size-3.5" />
+                        Edit
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => onDelete(transaction.id)}
-                        className="size-8 text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 dark:hover:bg-rose-500/20"
-                        title="Hapus transaksi"
+                        className="h-6 px-2 text-[11px] font-mono text-[#9F2F2D] dark:text-[#F87171] hover:bg-[#FDEBEC] dark:hover:bg-[#321B1B]"
                       >
-                        <Trash2 className="size-3.5" />
+                        Hapus
                       </Button>
                     </div>
                   </TableCell>

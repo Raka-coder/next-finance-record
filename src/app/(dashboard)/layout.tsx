@@ -20,7 +20,7 @@ import { useProfile } from "@/hooks/use-profile"
 import { useAuth } from "@/hooks/use-auth"
 import LoadingGlobal from "@/components/loading/loading-global"
 import LoadingToLogin from "@/components/loading/loading-to-login"
-// Import menu items for consistent naming
+
 const menuItems = [
   {
     id: "summary",
@@ -28,24 +28,9 @@ const menuItems = [
     href: "/dashboard",
   },
   {
-    id: "add",
-    title: "Tambah Transaksi",
-    href: "/dashboard/add-transaction",
-  },
-  {
     id: "list",
     title: "Daftar Transaksi",
     href: "/dashboard/transaction-lists",
-  },
-  {
-    id: "budgets-goals",
-    title: "Anggaran & Target",
-    href: "/dashboard/budgets-goals",
-  },
-  {
-    id: "recurring",
-    title: "Tagihan Berulang",
-    href: "/dashboard/recurring",
   },
   {
     id: "settings",
@@ -65,89 +50,74 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
 
   useEffect(() => {
-    // Redirect to login if not authenticated and not already loading
     if (!loading && (!isAuthenticated || !user)) {
       redirectToLogin()
     }
   }, [loading, isAuthenticated, user, redirectToLogin])
 
-  // Check session validity when component mounts and when pathname changes
   useEffect(() => {
     if (isAuthenticated && user) {
       checkSession()
     }
   }, [isAuthenticated, user, pathname, checkSession])
 
-
-  // Function to get page title based on pathname using sidebar menu data
   const getPageTitle = () => {
-    // Find exact match first
     const exactMatch = menuItems.find(item => item.href === pathname)
     if (exactMatch) {
       return exactMatch.title
     }
     
-    // Check for partial match (for subpages)
     const partialMatch = menuItems.find(item => pathname.startsWith(item.href))
     if (partialMatch) {
       return partialMatch.title
     }
     
-    // Default fallback
     return "Dashboard"
   }
 
-  // Function to generate breadcrumbs
   const getBreadcrumbs = () => {
     const segments = pathname.split("/").filter(Boolean)
 
     if (segments.length === 1 && segments[0] === "dashboard") {
       return (
-        <BreadcrumbList>
+        <BreadcrumbList className="font-mono text-xs text-muted-foreground">
           <BreadcrumbItem>
-            <BreadcrumbPage>Dashboard</BreadcrumbPage>
+            <BreadcrumbPage className="text-foreground font-medium">Buku Kas</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       )
     }
 
     return (
-      <BreadcrumbList>
+      <BreadcrumbList className="font-mono text-xs text-muted-foreground">
         <BreadcrumbItem>
-          <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href="/dashboard" className="hover:text-foreground">Buku Kas</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>{getPageTitle()}</BreadcrumbPage>
+          <BreadcrumbPage className="text-foreground font-medium">{getPageTitle()}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     )
   }
 
-  // Show loading spinner while checking authentication
   if (loading) {
-    return (
-      <LoadingGlobal />
-    )
+    return <LoadingGlobal />
   }
 
-  // Don't render anything if not authenticated (will redirect)
   if (!isAuthenticated || !user) {
-    return (
-      <LoadingToLogin />
-    )
+    return <LoadingToLogin />
   }
 
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
+      <SidebarInset className="bg-background">
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-4 bg-background/80 backdrop-blur-xs">
+          <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
+          <Separator orientation="vertical" className="mr-2 h-3.5 bg-border" />
           <Breadcrumb>{getBreadcrumbs()}</Breadcrumb>
 
-          {/* User Menu di ujung kanan */}
           <div className="ml-auto">
             <UserMenu
               profile={profile}
@@ -157,7 +127,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">{children}</div>
+        <div className="flex flex-1 flex-col gap-6 p-6 md:p-8 max-w-6xl w-full mx-auto">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

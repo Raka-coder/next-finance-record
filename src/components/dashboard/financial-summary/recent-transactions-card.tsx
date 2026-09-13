@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, TrendingDown, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import type { Transaction } from "@/interfaces/transaction-interface"
 
@@ -16,53 +15,49 @@ export function RecentTransactionsCard({
   const recent = transactions.slice(0, 5)
 
   return (
-    <Card className="bg-card/75 backdrop-blur-sm border-border/70 rounded-2xl shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+    <Card className="border border-border bg-card p-5 gap-0">
+      <CardHeader className="p-0 pb-4 flex flex-row items-baseline justify-between">
         <div>
-          <CardTitle className="text-base font-bold tracking-tight">Transaksi Terbaru</CardTitle>
-          <CardDescription className="text-xs text-muted-foreground">
-            {recent.length > 0 ? "5 aktivitas keuangan terakhir yang tercatat" : "Belum ada transaksi"}
+          <CardTitle className="text-sm font-semibold tracking-tight">Transaksi Terbaru</CardTitle>
+          <CardDescription className="text-xs text-muted-foreground mt-0.5">
+            {recent.length > 0 ? "5 catatan arus kas terkini" : "Belum ada transaksi"}
           </CardDescription>
         </div>
         {transactions.length > 0 && (
-          <Button asChild variant="ghost" size="sm" className="text-xs h-8 gap-1 font-medium text-muted-foreground hover:text-foreground">
+          <Button asChild variant="ghost" size="sm" className="h-7 text-xs font-mono text-muted-foreground hover:text-foreground">
             <Link href="/dashboard/transaction-lists">
-              Lihat Semua <ArrowUpRight className="size-3.5" />
+              Semua &rarr;
             </Link>
           </Button>
         )}
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+      <CardContent className="p-0">
+        <div className="divide-y divide-border border-t border-border">
           {recent.map((transaction) => {
             const isIncome = transaction.type === "income"
             return (
               <div
                 key={transaction.id}
-                className="group flex items-center justify-between p-3 rounded-xl border border-border/60 bg-background/50 hover:bg-muted/40 transition-colors"
+                className="flex items-center justify-between py-2.5 px-1 hover:bg-muted/40 transition-colors"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className={`size-10 rounded-xl flex items-center justify-center shrink-0 border transition-colors ${
-                      isIncome
-                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                        : "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400"
+                <div className="flex items-baseline gap-3 min-w-0">
+                  <span
+                    className={`size-1.5 rounded-full shrink-0 ${
+                      isIncome ? "bg-[#346538] dark:bg-[#81C784]" : "bg-[#9F2F2D] dark:bg-[#F87171]"
                     }`}
-                  >
-                    {isIncome ? <TrendingUp className="size-5" /> : <TrendingDown className="size-5" />}
-                  </div>
+                  />
                   <div className="min-w-0">
-                    <p className="font-semibold text-sm truncate text-foreground">{transaction.description}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                      <span className="font-medium">{transaction.category}</span>
-                      <span>•</span>
-                      <span>{new Date(transaction.date).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</span>
+                    <p className="text-xs font-medium text-foreground truncate">{transaction.description}</p>
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-muted-foreground mt-0.5">
+                      <span>{transaction.category}</span>
+                      <span>&middot;</span>
+                      <span>{new Date(transaction.date).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}</span>
                     </div>
                   </div>
                 </div>
                 <div
-                  className={`font-mono text-sm font-bold tabular-nums shrink-0 ml-4 ${
-                    isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+                  className={`font-mono text-xs font-medium tabular-nums shrink-0 ml-4 ${
+                    isIncome ? "text-[#346538] dark:text-[#81C784]" : "text-[#9F2F2D] dark:text-[#F87171]"
                   }`}
                 >
                   {isIncome ? "+" : "-"}
@@ -73,8 +68,8 @@ export function RecentTransactionsCard({
           })}
           {transactions.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground">
-                Belum ada transaksi tercatat pada akun ini.
+              <p className="text-xs font-mono text-muted-foreground">
+                Belum ada transaksi tercatat pada buku kas ini.
               </p>
             </div>
           )}

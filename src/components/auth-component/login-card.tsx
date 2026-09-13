@@ -1,7 +1,6 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Wallet } from "lucide-react"
 import { LoginForm } from "./login/login-form"
 import { useRouter } from "next/navigation"
 
@@ -17,19 +16,22 @@ export function LoginCard({ onLoginSuccess }: LoginCardProps) {
   }
 
   return (
-    <Card className="w-full max-w-[420px] shadow-sm border-border/70">
-      <CardHeader className="text-center pb-4">
-        <div className="flex justify-center mb-3">
-          <div className="flex aspect-square size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-sm">
-            <Wallet className="size-6 text-primary" />
+    <Card className="w-full max-w-[380px] rounded-md border border-border bg-card p-6 gap-0">
+      <CardHeader className="p-0 pb-6 text-left">
+        <div className="flex items-center justify-between mb-4">
+          <div className="size-7 rounded-[4px] bg-secondary border border-border flex items-center justify-center font-mono text-xs font-semibold text-foreground">
+            FR
           </div>
+          <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+            Auth
+          </span>
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight">Selamat Datang</CardTitle>
-        <CardDescription className="text-muted-foreground text-sm">
-          Masukkan email dan kata sandi untuk masuk ke akun Anda
+        <CardTitle className="text-xl font-semibold tracking-tight">Masuk ke Akun</CardTitle>
+        <CardDescription className="text-xs text-muted-foreground mt-1">
+          Masukkan kredensial Anda untuk mengakses catatan keuangan.
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent className="p-0">
         <LoginForm onLoginSuccess={onLoginSuccess || handleLoginSuccess} />
       </CardContent>
     </Card>

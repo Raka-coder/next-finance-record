@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ForgotPasswordFooter } from './forgot-password/forgot-password-footer'
-import { KeyRound } from 'lucide-react'
 
 interface ForgotPasswordCardProps {
   children: React.ReactNode
@@ -16,19 +15,22 @@ interface ForgotPasswordCardProps {
 
 export function ForgotPasswordCard({ children }: ForgotPasswordCardProps) {
   return (
-    <Card className="w-full max-w-[420px] shadow-sm border-border/70">
-      <CardHeader className="text-center pb-4">
-        <div className="flex justify-center mb-3">
-          <div className="flex aspect-square size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-sm">
-            <KeyRound className="size-6 text-primary" />
+    <Card className="w-full max-w-[380px] rounded-md border border-border bg-card p-6 gap-0">
+      <CardHeader className="p-0 pb-6 text-left">
+        <div className="flex items-center justify-between mb-4">
+          <div className="size-7 rounded-[4px] bg-secondary border border-border flex items-center justify-center font-mono text-xs font-semibold text-foreground">
+            FR
           </div>
+          <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+            Reset
+          </span>
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight">Atur Ulang Kata Sandi</CardTitle>
-        <CardDescription className="text-center text-muted-foreground text-sm">
-          Masukkan email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi
+        <CardTitle className="text-xl font-semibold tracking-tight">Atur Ulang Sandi</CardTitle>
+        <CardDescription className="text-xs text-muted-foreground mt-1">
+          Tautan pemulihan akan dikirimkan ke alamat email terdaftar.
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent className="p-0 space-y-4">
         {children}
         <ForgotPasswordFooter />
       </CardContent>

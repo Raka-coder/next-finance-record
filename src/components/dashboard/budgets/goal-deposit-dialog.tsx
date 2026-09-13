@@ -56,7 +56,7 @@ export function GoalDepositDialog({ open, onOpenChange, goal, onSuccess }: GoalD
         <DialogHeader>
           <DialogTitle>Kelola Saldo Target</DialogTitle>
           <DialogDescription>
-            Ubah akumulasi tabungan untuk target <span className="font-semibold text-foreground">"{goal.name}"</span>.
+            Ubah akumulasi tabungan untuk target <span className="font-semibold text-foreground">&quot;{goal.name}&quot;</span>.
           </DialogDescription>
         </DialogHeader>
 

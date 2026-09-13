@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UserIcon } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
 import type { Profile } from "@/interfaces/profile-interface"
 
@@ -25,77 +24,87 @@ export function ProfileSettingsCard({ user, profile = null }: ProfileSettingsCar
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <UserIcon className="size-5" />
-          Profil Pengguna
-        </CardTitle>
-        <CardDescription>Kelola informasi profil Anda</CardDescription>
+    <Card className="border border-border bg-card p-5 gap-0">
+      <CardHeader className="p-0 pb-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-semibold tracking-tight">Profil Pengguna</CardTitle>
+          <span className="text-[11px] font-mono text-muted-foreground uppercase">Akun</span>
+        </div>
+        <CardDescription className="text-xs text-muted-foreground">Informasi identitas akun dan mata uang dasar</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Avatar className="h-20 w-20">
+      <CardContent className="p-0 pt-2 space-y-5">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-12 w-12 rounded-[4px] border border-border">
             <AvatarImage
               src={profile?.avatar_url || ""}
               alt={profile?.username || ""}
             />
-            <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+            <AvatarFallback className="bg-secondary text-foreground text-xs font-mono font-medium rounded-[4px]">
               {profile
                 ? getInitials(profile.full_name || profile.username)
                 : "U"}
             </AvatarFallback>
           </Avatar>
-          <div className="space-y-1">
-            <h3 className="text-lg font-medium">
+          <div>
+            <h3 className="text-sm font-medium text-foreground">
               {profile?.full_name || "Nama belum diatur"}
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs font-mono text-muted-foreground">
               @{profile?.username || "username"}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nama Lengkap</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div className="space-y-1">
+            <Label htmlFor="name" className="text-[11px] font-mono text-muted-foreground uppercase">
+              Nama Lengkap
+            </Label>
             <Input
               id="name"
-              placeholder="Masukkan nama lengkap"
+              placeholder="Nama lengkap"
               defaultValue={profile?.full_name || ""}
               disabled
+              className="bg-muted/40 font-mono text-xs"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+          <div className="space-y-1">
+            <Label htmlFor="username" className="text-[11px] font-mono text-muted-foreground uppercase">
+              Username
+            </Label>
             <Input
               id="username"
               placeholder="username"
               defaultValue={profile?.username || ""}
               disabled
+              className="bg-muted/40 font-mono text-xs"
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+        <div className="space-y-1">
+          <Label htmlFor="email" className="text-[11px] font-mono text-muted-foreground uppercase">
+            Alamat Email
+          </Label>
           <Input
             id="email"
             type="email"
-            placeholder="john@example.com"
             defaultValue={user.email || ""}
             disabled
+            className="bg-muted/40 font-mono text-xs"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="currency">Mata Uang Default</Label>
+        <div className="space-y-1">
+          <Label htmlFor="currency" className="text-[11px] font-mono text-muted-foreground uppercase">
+            Mata Uang Basis
+          </Label>
           <Select defaultValue="IDR">
             <SelectTrigger className="w-full md:w-[200px]">
               <SelectValue placeholder="Pilih mata uang" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="IDR">Rupiah (IDR)</SelectItem>
+              <SelectItem value="IDR" className="font-mono text-xs">Rupiah Indonesia (IDR)</SelectItem>
             </SelectContent>
           </Select>
         </div>

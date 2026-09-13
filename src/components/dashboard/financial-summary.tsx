@@ -3,14 +3,15 @@
 import { useMemo, useState } from "react"
 import type { Transaction } from "@/interfaces/transaction-interface"
 import { SummaryCards } from "./financial-summary/summary-cards"
-import { CategoryAnalysisSection } from "./financial-summary/category-analysis-section"
+import { PieChartsSection } from "./financial-summary/pie-charts-section"
+import { CategoryBreakdown } from "./financial-summary/category-breakdown"
 import { RecentTransactionsCard } from "./financial-summary/recent-transactions-card"
 import { AddTransactionDialog } from "./transaction/add-transaction-dialog"
-import { CashflowTrendChart } from "@/components/dashboard/analytics/cashflow-trend-chart"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Plus, ReceiptText } from "lucide-react"
+
 import type { MonthOverMonthData, MonthlyTrendPoint } from "@/services/analytics.service"
+import { CashflowTrendChart } from "./analytics/cashflow-trend-chart"
 
 interface FinancialSummaryProps {
   transactions: Transaction[]
@@ -25,7 +26,7 @@ export function FinancialSummary({
   transactions,
   onAddTransaction,
   momData,
-  sixMonthTrend = [],
+  sixMonthTrend,
 }: FinancialSummaryProps) {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
 
@@ -109,30 +110,35 @@ export function FinancialSummary({
 
   if (!transactions) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-sm text-muted-foreground animate-pulse">Memuat ringkasan keuangan...</div>
+      <div className="flex justify-center items-center h-48">
+        <div className="text-xs font-mono text-muted-foreground">Memuat data...</div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header Halaman */}
-      <div className="flex items-center justify-between gap-4">
+    <div className="space-y-8 max-w-5xl">
+      {/* Editorial Header Section with Single Primary Action */}
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Ringkasan Keuangan</h1>
+          <div className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1">
+            Buku Kas
+          </div>
+          <h1 className="text-2xl font-medium tracking-tight text-foreground">
+            Ringkasan Keuangan
+          </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Ikhtisar arus kas, saldo bersih, dan analisis pengeluaran Anda
+            Ikhtisar posisi kas masuk, kas keluar, dan alokasi kategori.
           </p>
         </div>
 
         {onAddTransaction && (
           <Button
             onClick={() => setAddDialogOpen(true)}
-            className="shrink-0 font-semibold gap-2 shadow-sm rounded-xl h-10 cursor-pointer"
+            size="default"
+            className="self-start sm:self-auto font-mono text-xs cursor-pointer"
           >
-            <Plus className="size-4" />
-            <span>Catat Transaksi</span>
+            + Catat Transaksi
           </Button>
         )}
       </div>
@@ -152,58 +158,59 @@ export function FinancialSummary({
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
-            momData={momData}
           />
 
-          <Card className="border-dashed border-2 bg-card/40 backdrop-blur-sm rounded-2xl">
-            <CardContent className="flex flex-col items-center justify-center py-16 text-center px-4">
-              <div className="size-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 shadow-sm">
-                <ReceiptText className="size-7" />
+          <Card className="border border-dashed border-border bg-card p-12 text-center">
+            <CardContent className="p-0 flex flex-col items-center">
+              <div className="size-8 rounded-[4px] bg-secondary border border-border flex items-center justify-center font-mono text-xs text-foreground mb-3">
+                0
               </div>
-              <h3 className="text-xl font-bold tracking-tight">Belum Ada Transaksi Tercatat</h3>
-              <p className="text-muted-foreground text-sm max-w-md mt-1 mb-6">
-                Mulai kelola keuangan Anda dengan mencatat pemasukan gaji, usaha, atau pengeluaran harian pertama Anda sekarang.
+              <h3 className="text-sm font-semibold text-foreground">Belum Ada Transaksi</h3>
+              <p className="text-xs text-muted-foreground max-w-xs mt-1 mb-4">
+                Buku kas ini masih kosong. Mulai dengan mencatat transaksi pertama Anda.
               </p>
               {onAddTransaction && (
-                <Button size="lg" onClick={() => setAddDialogOpen(true)} className="font-semibold shadow-sm rounded-xl h-11 cursor-pointer">
-                  <Plus className="size-4 mr-2" />
-                  Catat Transaksi Pertama
+                <Button size="sm" onClick={() => setAddDialogOpen(true)} className="font-mono text-xs">
+                  + Catat Transaksi Pertama
                 </Button>
               )}
             </CardContent>
           </Card>
         </div>
       ) : (
-        <>
-          {/* 1. Bento Summary Cards (Integrated with MoM deltas) */}
+        <div className="space-y-6">
+          {/* Bento Summary Cards */}
           <SummaryCards
             transactions={transactions}
             formatCurrency={formatCurrency}
-            momData={momData}
           />
 
-          {/* 2. Tren Arus Kas Multi-Bulan */}
+          {/* Six Month Cashflow Trend */}
           {sixMonthTrend && sixMonthTrend.length > 0 && (
             <CashflowTrendChart data={sixMonthTrend} />
           )}
 
-          {/* 3. Distribusi & Analisis Kategori Terpadu (Menggantikan PieChart + Breakdown terpisah) */}
-          <CategoryAnalysisSection
+          {/* Category Breakdown */}
+          <CategoryBreakdown 
             topExpenseCategories={financialData.topExpenseCategories}
             topIncomeCategories={financialData.topIncomeCategories}
-            expensePieData={financialData.expensePieData}
-            incomePieData={financialData.incomePieData}
             totalExpense={financialData.totalExpense}
             totalIncome={financialData.totalIncome}
             formatCurrency={formatCurrency}
           />
 
-          {/* 4. Riwayat Transaksi Terbaru */}
+          {/* Pie Charts Section */}
+          <PieChartsSection 
+            incomePieData={financialData.incomePieData} 
+            expensePieData={financialData.expensePieData} 
+          />
+
+          {/* Recent Transactions */}
           <RecentTransactionsCard
             transactions={transactions}
             formatCurrency={formatCurrency}
           />
-        </>
+        </div>
       )}
     </div>
   )

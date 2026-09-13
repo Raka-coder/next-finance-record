@@ -1,5 +1,4 @@
 import { format, parse, isValid } from "date-fns"
-import { CalendarIcon } from "lucide-react"
 import { type Control, useFormContext } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -50,45 +49,45 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
   }
 
   return (
-    <div className="space-y-4">
-      {/* Field Nominal dengan Quick Chips */}
+    <div className="space-y-3">
+      {/* Field Nominal */}
       <FormField
         control={control}
         name="amount"
         render={({ field }) => (
-          <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Nominal Transaksi
+          <FormItem className="space-y-1">
+            <FormLabel className="text-[11px] font-mono uppercase tracking-[0.06em] text-muted-foreground">
+              Nominal (Rp)
             </FormLabel>
             <FormControl>
-              <div className="relative rounded-xl border border-border/70 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all bg-background">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-sm font-semibold text-muted-foreground select-none">
+              <div className="relative">
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-mono text-xs text-muted-foreground select-none">
                   Rp
                 </span>
                 <Input
                   type="number"
                   placeholder="0"
-                  className="pl-11 border-0 focus-visible:ring-0 text-lg font-mono font-bold tabular-nums h-11 bg-transparent"
+                  className="pl-8 font-mono text-sm font-medium tabular-nums h-8"
                   {...field}
                 />
               </div>
             </FormControl>
 
             {/* Quick Chips diselaraskan di bawah input */}
-            <div className="flex items-center gap-1.5 pt-0.5 overflow-x-auto pb-1">
-              <span className="text-[11px] text-muted-foreground shrink-0 font-medium mr-0.5">Cepat:</span>
+            <div className="flex items-center gap-1 pt-1 overflow-x-auto">
+              <span className="text-[10px] font-mono text-muted-foreground shrink-0 mr-1">Cepat:</span>
               {QUICK_AMOUNTS.map((item) => (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => handleAddQuickAmount(item.value)}
-                  className="px-2 py-0.5 text-[11px] font-mono font-medium rounded-md bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground border border-border/50 transition-colors cursor-pointer active:scale-95 shrink-0"
+                  className="px-1.5 py-0.5 text-[10px] font-mono rounded-[3px] bg-secondary hover:bg-muted text-foreground border border-border transition-colors cursor-pointer active:scale-95 shrink-0"
                 >
                   {item.label}
                 </button>
               ))}
             </div>
-            <FormMessage className="text-xs" />
+            <FormMessage className="text-[11px]" />
           </FormItem>
         )}
       />
@@ -98,8 +97,8 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
         control={control}
         name="date"
         render={({ field }) => (
-          <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <FormItem className="space-y-1">
+            <FormLabel className="text-[11px] font-mono uppercase tracking-[0.06em] text-muted-foreground">
               Tanggal Transaksi
             </FormLabel>
             <Popover>
@@ -107,21 +106,20 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                 <FormControl className="cursor-pointer">
                   <Button
                     variant="outline"
+                    size="sm"
                     className={cn(
-                      "w-full justify-start text-left font-normal h-10 rounded-xl border-border/70",
+                      "w-full justify-start text-left font-mono text-xs h-8 rounded-[4px]",
                       !field.value && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                     {field.value
                       ? safeFormatDate(safeParseDate(field.value), "dd MMMM yyyy")
                       : "Pilih tanggal"}
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0 border border-border" align="start">
                 <Calendar
-                  className="cursor-pointer"
                   mode="single"
                   selected={field.value ? safeParseDate(field.value) : undefined}
                   onSelect={(date) =>
@@ -133,7 +131,7 @@ export function TransactionAmountDateFields({ control }: TransactionAmountDateFi
                 />
               </PopoverContent>
             </Popover>
-            <FormMessage className="text-xs" />
+            <FormMessage className="text-[11px]" />
           </FormItem>
         )}
       />

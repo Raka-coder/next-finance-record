@@ -18,48 +18,29 @@ interface PieChartProps {
   showLegend?: boolean
 }
 
-export function PieChart({ title, data, height = 300, showLegend = true }: PieChartProps) {
+export function PieChart({ title, data, height = 280, showLegend = true }: PieChartProps) {
   const { theme } = useTheme()
   const chartRef = useRef<HighchartsReact.RefObject>(null)
 
-  // Define colors for categories
-  const getCategoryColor = (categoryName: string, type: "income" | "expense") => {
-    const incomeColors = {
-      Gaji: "#10B981",
-      Freelance: "#059669",
-      Investasi: "#047857",
-      Bonus: "#065F46",
-      Lainnya: "#064E3B",
-    }
+  // Muted pastels palette inspired by Linear/Notion
+  const palette = [
+    "#346538", // Forest Muted Green
+    "#1F6C9F", // Slate Blue
+    "#956400", // Muted Amber
+    "#6B5B95", // Muted Violet
+    "#9F2F2D", // Muted Brick
+    "#5A6B7C", // Muted Steel
+    "#787774", // Neutral Gray
+  ]
 
-    const expenseColors = {
-      Makanan: "#EF4444",
-      Transportasi: "#DC2626",
-      Belanja: "#B91C1C",
-      Tagihan: "#991B1B",
-      Hiburan: "#7F1D1D",
-      Kesehatan: "#6B1D1D",
-      Lainnya: "#5B1D1D",
-    }
-
-    if (type === "income") {
-      return incomeColors[categoryName as keyof typeof incomeColors] || "#10B981"
-    } else {
-      return expenseColors[categoryName as keyof typeof expenseColors] || "#EF4444"
-    }
-  }
-
-  // Determine chart type based on title
-  const chartType = title.toLowerCase().includes("pengeluaran") ? "expense" : "income"
-
-  // Add colors to data
-  const dataWithColors = data.map((item) => ({
+  const dataWithColors = data.map((item, idx) => ({
     ...item,
-    color: getCategoryColor(item.name, chartType),
+    color: item.color || palette[idx % palette.length],
   }))
 
-  // Calculate total for percentage calculation
   const totalAmount = data.reduce((sum, item) => sum + item.y, 0)
+
+  const isDark = theme === "dark"
 
   const options: Highcharts.Options = {
     chart: {
@@ -67,53 +48,46 @@ export function PieChart({ title, data, height = 300, showLegend = true }: PieCh
       height: height,
       backgroundColor: "transparent",
       style: {
-        fontFamily: "Inter, system-ui, sans-serif",
+        fontFamily: "var(--font-mono), monospace",
       },
     },
     title: {
-      text: title,
+      text: title || undefined,
       style: {
-        color: theme === "dark" ? "#F9FAFB" : "#111827",
-        fontSize: "16px",
-        fontWeight: "600",
+        color: isDark ? "#EDEDED" : "#1A1A1A",
+        fontSize: "13px",
+        fontWeight: "500",
       },
     },
     tooltip: {
-      backgroundColor: theme === "dark" ? "#374151" : "#FFFFFF",
-      borderColor: theme === "dark" ? "#4B5563" : "#E5E7EB",
+      backgroundColor: isDark ? "#1C1C1C" : "#FFFFFF",
+      borderColor: isDark ? "#2A2A2A" : "#E8E7E3",
+      borderRadius: 4,
+      shadow: false,
       style: {
-        color: theme === "dark" ? "#F9FAFB" : "#111827",
+        color: isDark ? "#EDEDED" : "#1A1A1A",
+        fontSize: "11px",
       },
       formatter: function () {
         const point = this.series.points[this.series.data.indexOf(this)];
         if (!point || typeof point.y !== "number" || !point.name) {
-        return "<b>Data tidak tersedia</b>";
+          return "Data tidak tersedia";
         }
-
         const percentage = totalAmount > 0 ? ((point.y / totalAmount) * 100).toFixed(1) : "0.0";
         const formattedAmount = point.y.toLocaleString("id-ID");
-
-        return `<b>${point.name}</b><br/>
-                Jumlah: <b>Rp ${formattedAmount}</b><br/>
-                Persentase: <b>${percentage}%</b>`;
-        },
+        return `<b>${point.name}</b><br/>Rp ${formattedAmount} (${percentage}%)`;
+      },
     },
     plotOptions: {
       pie: {
         allowPointSelect: true,
         cursor: "pointer",
         dataLabels: {
-          enabled: true,
-          format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-          style: {
-            color: theme === "dark" ? "#D1D5DB" : "#374151",
-            fontSize: "12px",
-          },
-          distance: 20,
+          enabled: false,
         },
         showInLegend: showLegend,
-        borderWidth: 2,
-        borderColor: theme === "dark" ? "#1F2937" : "#FFFFFF",
+        borderWidth: 1,
+        borderColor: isDark ? "#1C1C1C" : "#FFFFFF",
       },
     },
     legend: {
@@ -122,11 +96,12 @@ export function PieChart({ title, data, height = 300, showLegend = true }: PieCh
       verticalAlign: "bottom",
       layout: "horizontal",
       itemStyle: {
-        color: theme === "dark" ? "#D1D5DB" : "#374151",
-        fontSize: "12px",
+        color: isDark ? "#8C8B88" : "#787774",
+        fontSize: "11px",
+        fontWeight: "400",
       },
       itemHoverStyle: {
-        color: theme === "dark" ? "#F9FAFB" : "#111827",
+        color: isDark ? "#EDEDED" : "#1A1A1A",
       },
     },
     series: [
@@ -134,81 +109,44 @@ export function PieChart({ title, data, height = 300, showLegend = true }: PieCh
         type: "pie",
         name: "Jumlah",
         data: dataWithColors,
-        size: "80%",
-        innerSize: "40%", // Donut style
+        size: "90%",
+        innerSize: "55%", // Donut style
       },
     ],
     credits: {
       enabled: false,
     },
-    responsive: {
-      rules: [
-        {
-          condition: {
-            maxWidth: 500,
-          },
-          chartOptions: {
-            plotOptions: {
-              pie: {
-                dataLabels: {
-                  enabled: false,
-                },
-              },
-            },
-            legend: {
-              enabled: true,
-            },
-          },
-        },
-      ],
-    },
   }
 
-  // Update chart theme when theme changes
   useEffect(() => {
     if (chartRef.current) {
       const chart = chartRef.current.chart
       if (chart) {
         chart.update({
-          title: {
-            style: {
-              color: theme === "dark" ? "#F9FAFB" : "#111827",
-            },
-          },
           tooltip: {
-            backgroundColor: theme === "dark" ? "#374151" : "#FFFFFF",
-            borderColor: theme === "dark" ? "#4B5563" : "#E5E7EB",
+            backgroundColor: isDark ? "#1C1C1C" : "#FFFFFF",
+            borderColor: isDark ? "#2A2A2A" : "#E8E7E3",
             style: {
-              color: theme === "dark" ? "#F9FAFB" : "#111827",
-            },
-          },
-          plotOptions: {
-            pie: {
-              dataLabels: {
-                style: {
-                  color: theme === "dark" ? "#D1D5DB" : "#374151",
-                },
-              },
-              borderColor: theme === "dark" ? "#1F2937" : "#FFFFFF",
+              color: isDark ? "#EDEDED" : "#1A1A1A",
             },
           },
           legend: {
             itemStyle: {
-              color: theme === "dark" ? "#D1D5DB" : "#374151",
+              color: isDark ? "#8C8B88" : "#787774",
             },
             itemHoverStyle: {
-              color: theme === "dark" ? "#F9FAFB" : "#111827",
+              color: isDark ? "#EDEDED" : "#1A1A1A",
             },
           },
         })
       }
     }
-  }, [theme])
+  }, [isDark])
 
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/50 rounded-lg">
-        <p className="text-muted-foreground">Tidak ada data untuk ditampilkan</p>
+      <div className="flex items-center justify-center h-[220px] border border-dashed border-border rounded-[4px]">
+        <p className="text-xs font-mono text-muted-foreground">Tidak ada data</p>
       </div>
     )
   }

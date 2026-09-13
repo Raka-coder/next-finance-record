@@ -24,11 +24,9 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ProfileService } from "@/services/profile.service"
 import type { Profile } from "@/interfaces/profile-interface"
-import { Settings, LogOut, Edit, UserPlus } from "lucide-react"
 import { LogoutDialog } from "@/components/dialog/logout-dialog"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -57,7 +55,6 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-  // Context Auth
   useAuth()
 
   const validateUsername = async (username: string, isCreate = false) => {
@@ -66,7 +63,7 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       return false
     }
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      setUsernameError("Username hanya boleh mengandung huruf, angka, dan underscore")
+      setUsernameError("Hanya huruf, angka, dan underscore")
       return false
     }
 
@@ -100,13 +97,11 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
     e.preventDefault()
     setLoading(true)
 
-    // Cek apakah ada perubahan
     const hasChanges = 
       editForm.username !== profile?.username || 
       editForm.full_name !== profile?.full_name
 
     if (!hasChanges) {
-      console.error("Tidak ada profil yang diubah")
       toast.error("Tidak ada profil yang diubah")
       setLoading(false)
       return
@@ -125,9 +120,8 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       })
 
       setIsEditDialogOpen(false)
-      toast.success("Profil berhasil diperbarui!")
-    } catch (error: unknown) {
-      console.error("Error updating profile", error)
+      toast.success("Profil diperbarui")
+    } catch {
       toast.error("Gagal memperbarui profil")
     } finally {
       setLoading(false)
@@ -148,11 +142,10 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       if (onProfileCreate) {
         await onProfileCreate(createForm.username, createForm.full_name)
         setIsCreateDialogOpen(false)
-        alert("Profil berhasil dibuat!")
+        toast.success("Profil dibuat")
       }
-    } catch (error: unknown) {
-      console.error("Error creating profile",error)
-      alert("Gagal membuat profil")
+    } catch {
+      toast.error("Gagal membuat profil")
     } finally {
       setLoading(false)
     }
@@ -167,59 +160,54 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
       .slice(0, 2)
   }
 
-  // Jika profile tidak ada, tampilkan tombol untuk membuat profile
   if (!profile) {
     return (
-      <div className="flex items-center gap-3">
-        <div className="hidden sm:flex flex-col items-end">
-          <span className="text-sm font-medium">{userEmail || "User"}</span>
-          <Badge variant="outline" className="text-xs">
-            Profile belum dibuat
-          </Badge>
+      <div className="flex items-center gap-2">
+        <div className="hidden sm:flex flex-col items-end leading-none">
+          <span className="text-xs font-mono text-muted-foreground">{userEmail || "User"}</span>
         </div>
 
         <ThemeToggle />
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
-              <UserPlus className="size-4 mr-2" />
-              Buat Profile
+            <Button variant="outline" size="sm" className="font-mono text-xs">
+              + Buat Profil
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[380px]">
             <DialogHeader>
-              <DialogTitle>Buat Profile</DialogTitle>
-              <DialogDescription>Buat profile Anda untuk melengkapi akun</DialogDescription>
+              <DialogTitle>Buat Profil</DialogTitle>
+              <DialogDescription>Lengkapi nama dan nama pengguna Anda</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleCreateProfile} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="create-fullname">Nama Lengkap</Label>
+            <form onSubmit={handleCreateProfile} className="space-y-3">
+              <div className="space-y-1">
+                <Label htmlFor="create-fullname" className="text-xs font-mono">Nama Lengkap</Label>
                 <Input
                   id="create-fullname"
                   value={createForm.full_name}
                   onChange={(e) => setCreateForm((prev) => ({ ...prev, full_name: e.target.value }))}
-                  placeholder="Masukkan nama lengkap"
+                  placeholder="Nama Anda"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="create-username">Username</Label>
+              <div className="space-y-1">
+                <Label htmlFor="create-username" className="text-xs font-mono">Username</Label>
                 <Input
                   id="create-username"
                   value={createForm.username}
                   onChange={(e) => handleUsernameChange(e.target.value, true)}
-                  placeholder="Masukkan username"
+                  placeholder="username"
                   required
                   minLength={3}
                 />
-                {usernameError && <p className="text-sm text-red-600">{usernameError}</p>}
+                {usernameError && <p className="text-[11px] text-[#9F2F2D]">{usernameError}</p>}
               </div>
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => setIsCreateDialogOpen(false)}>
                   Batal
                 </Button>
-                <Button type="submit" disabled={loading || !!usernameError}>
-                  {loading ? "Membuat..." : "Buat Profile"}
+                <Button type="submit" size="sm" disabled={loading || !!usernameError}>
+                  {loading ? "Membuat..." : "Simpan"}
                 </Button>
               </div>
             </form>
@@ -231,34 +219,33 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
 
   return (
     <div className="flex items-center gap-3">
-      <div className="hidden sm:flex flex-col items-end">
-        <span className="text-sm font-medium">{profile.full_name || profile.username}</span>
-        <Badge variant="secondary" className="text-xs">
-          @{profile.username}
-        </Badge>
+      <div className="hidden sm:flex flex-col items-end leading-tight">
+        <span className="text-xs font-medium text-foreground">{profile.full_name || profile.username}</span>
+        <span className="text-[10px] font-mono text-muted-foreground">@{profile.username}</span>
       </div>
 
       <ThemeToggle />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-            <Avatar className="h-10 w-10">
+          <button className="relative size-7 rounded-[4px] border border-border flex items-center justify-center overflow-hidden hover:opacity-85 transition-opacity cursor-pointer">
+            <Avatar className="size-7 rounded-[3px]">
               <AvatarImage src={profile.avatar_url || ""} alt={profile.username} />
-              <AvatarFallback className="bg-primary text-primary-foreground">
+              <AvatarFallback className="bg-secondary text-foreground text-[10px] font-mono font-medium rounded-[3px]">
                 {getInitials(profile.full_name || profile.username)}
               </AvatarFallback>
             </Avatar>
-          </Button>
+          </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{profile.full_name || profile.username}</p>
-              <p className="text-xs leading-none text-muted-foreground">@{profile.username}</p>
+        <DropdownMenuContent className="w-52" align="end">
+          <DropdownMenuLabel>
+            <div className="flex flex-col space-y-0.5">
+              <span className="text-xs font-medium text-foreground">{profile.full_name || profile.username}</span>
+              <span className="text-[10px] font-mono text-muted-foreground">@{profile.username}</span>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogTrigger asChild>
               <DropdownMenuItem
@@ -271,43 +258,43 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
                   setIsEditDialogOpen(true)
                 }}
               >
-                <Edit className="mr-2 h-4 w-4" />
                 <span>Edit Profil</span>
               </DropdownMenuItem>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[380px]">
               <DialogHeader>
                 <DialogTitle>Edit Profil</DialogTitle>
-                <DialogDescription>Perbarui informasi profil Anda di sini.</DialogDescription>
+                <DialogDescription>Perbarui nama dan username profil Anda.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleUpdateProfile} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-fullname">Nama Lengkap</Label>
+              <form onSubmit={handleUpdateProfile} className="space-y-3">
+                <div className="space-y-1">
+                  <Label htmlFor="edit-fullname" className="text-xs font-mono">Nama Lengkap</Label>
                   <Input
                     id="edit-fullname"
                     value={editForm.full_name}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, full_name: e.target.value }))}
-                    placeholder="Masukkan nama lengkap"
+                    placeholder="Nama lengkap"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-username">Username</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="edit-username" className="text-xs font-mono">Username</Label>
                   <Input
                     id="edit-username"
                     value={editForm.username}
                     onChange={(e) => handleUsernameChange(e.target.value)}
-                    placeholder="Masukkan username"
+                    placeholder="username"
                     required
                     minLength={3}
                   />
-                  {usernameError && <p className="text-sm text-red-600">{usernameError}</p>}
+                  {usernameError && <p className="text-[11px] text-[#9F2F2D]">{usernameError}</p>}
                 </div>
-                <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button type="button" variant="outline" size="sm" onClick={() => setIsEditDialogOpen(false)}>
                     Batal
                   </Button>
                   <Button 
                     type="submit" 
+                    size="sm"
                     disabled={loading || !!usernameError}
                   >
                     {loading ? "Menyimpan..." : "Simpan"}
@@ -317,16 +304,18 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
             </DialogContent>
           </Dialog>
           
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-              <Link href="/dashboard/settings">            
-                <span>Pengaturan</span>
-              </Link>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/settings" className="w-full">
+              <span>Pengaturan</span>
+            </Link>
           </DropdownMenuItem>
+
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsLogoutDialogOpen(true)}>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Keluar</span>
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => setIsLogoutDialogOpen(true)}
+          >
+            <span>Keluar Akun</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
