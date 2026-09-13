@@ -1,126 +1,62 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { useSession, signOut } from "@/lib/auth-client"
 import { createClient } from "@/utils/supabase/client"
-import type { User } from "@supabase/supabase-js"
+import { useState, useEffect, useRef } from "react"
 import { toast } from "sonner"
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const router = useRouter()
+  const { data: session, isPending, refetch } = useSession()
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [logoutError, setLogoutError] = useState<string | null>(null)
-  const router = useRouter()
-  const supabase = createClient()
+  const syncedUserId = useRef<string | null>(null)
 
-  // Function to check session validity
-  const checkSession = useCallback(async () => {
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error) {
-        console.error("Session check error:", error)
-        // If there's an error checking session, treat as unauthenticated
-        setUser(null)
-        setIsAuthenticated(false)
-        setLoading(false)
-        return false
-      }
-      
-      if (!session) {
-        setUser(null)
-        setIsAuthenticated(false)
-        setLoading(false)
-        return false
-      }
-      
-      // Validate session by trying to get user
-      const { data: { user: validatedUser }, error: userError } = await supabase.auth.getUser()
-      
-      if (userError || !validatedUser) {
-        console.error("User validation error:", userError)
-        // Session is invalid, clear state and redirect
-        setUser(null)
-        setIsAuthenticated(false)
-        setLoading(false)
-        
-        // Show error toast only if we were previously authenticated
-        if (isAuthenticated) {
-          console.log("Session expired")
+  // Sync session to Supabase client so RLS (auth.uid() = user_id) works flawlessly
+  useEffect(() => {
+    if (session?.user && syncedUserId.current !== session.user.id) {
+      const syncSupabase = async () => {
+        try {
+          const supabase = createClient()
+          const current = await supabase.auth.getUser()
+          if (current.data?.user?.id === session.user.id) {
+            syncedUserId.current = session.user.id
+            return
+          }
+
+          const res = await fetch("/api/auth/supabase-token")
+          if (!res.ok) return
+          const data = await res.json()
+          if (data.token_hash) {
+            await supabase.auth.verifyOtp({
+              token_hash: data.token_hash,
+              type: "email",
+            })
+            syncedUserId.current = session.user.id
+          }
+        } catch (e) {
+          console.error("Error syncing Supabase session:", e)
         }
-        
-        // Redirect to login if on a protected page
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login') && 
-            !window.location.pathname.startsWith('/register') && 
-            !window.location.pathname.startsWith('/forgot-password') &&
-            !window.location.pathname.startsWith('/update-password') &&
-            !window.location.pathname.startsWith('/confirm')) {
-          router.push("/login")
-        }
-        
-        return false
       }
-      
-      setUser(validatedUser)
-      setIsAuthenticated(true)
-      setLoading(false)
-      return true
-    } catch (err) {
-      console.error("Unexpected error during session check:", err)
-      setUser(null)
-      setIsAuthenticated(false)
-      setLoading(false)
-      return false
+      syncSupabase()
     }
-  }, [isAuthenticated, router])
+  }, [session?.user])
 
-  useEffect(() => {
-    // Get initial session
-    checkSession()
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setUser(null)
-        setIsAuthenticated(false)
-        setLoading(false)
-        // Redirect to login if on a protected page
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login') && 
-            !window.location.pathname.startsWith('/register') && 
-            !window.location.pathname.startsWith('/forgot-password') &&
-            !window.location.pathname.startsWith('/update-password') &&
-            !window.location.pathname.startsWith('/confirm')) {
-          router.push("/login")
-        }
-        return
+  const user = session?.user
+    ? {
+        ...session.user,
+        user_metadata: {
+          full_name: session.user.name,
+          avatar_url: session.user.image,
+        },
       }
-      setUser(session.user)
-      setIsAuthenticated(true)
-      setLoading(false)
-    })
+    : null
 
-    return () => subscription.unsubscribe()
-  }, [checkSession, router])
-
-  // Periodically check session validity (every 5 minutes)
-  useEffect(() => {
-    if (!isAuthenticated) return
-    
-    const interval = setInterval(() => {
-      checkSession()
-    }, 5 * 60 * 1000) // 5 minutes
-    
-    return () => clearInterval(interval)
-  }, [isAuthenticated, checkSession])
+  const isAuthenticated = !!session?.user
+  const loading = isPending
 
   const redirectToLogin = () => {
-    // Clear user state immediately
-    setUser(null)
-    setIsAuthenticated(false)
     router.push("/login")
   }
 
@@ -133,31 +69,34 @@ export function useAuth() {
       setLogoutLoading(true)
       setLogoutError(null)
 
-      const { error } = await supabase.auth.signOut()
-      
-      if (error) {
-        setLogoutError(error.message)
-        throw error
+      try {
+        const supabase = createClient()
+        await supabase.auth.signOut()
+      } catch {
+        // Continue logout
       }
 
-      // Clear any local storage or cache if needed
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('user-preferences')
-        localStorage.removeItem('hasVisitedDashboard')
-      }
-      
-      // Clear user state
-      setUser(null)
-      setIsAuthenticated(false)
-      
-      // Show success toast
-      toast.message("Logout berhasil!", {
-        description: "Anda telah keluar dari akun.",
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            syncedUserId.current = null
+            if (typeof window !== "undefined") {
+              localStorage.removeItem("user-preferences")
+              localStorage.removeItem("hasVisitedDashboard")
+            }
+            toast.message("Logout berhasil!", {
+              description: "Anda telah keluar dari akun.",
+            })
+            redirectToLogin()
+          },
+          onError: (ctx) => {
+            const msg = ctx.error.message || "Terjadi kesalahan saat logout"
+            setLogoutError(msg)
+            toast.error("Logout gagal", { description: msg })
+          },
+        },
       })
-      
-      // Redirect to login page
-      redirectToLogin()
-      
+
       return true
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Terjadi kesalahan saat logout"
@@ -175,8 +114,17 @@ export function useAuth() {
     setLogoutError(null)
   }
 
+  const checkSession = async () => {
+    try {
+      await refetch()
+      return !!session?.user
+    } catch {
+      return false
+    }
+  }
+
   return {
-    user,
+    user: user as any,
     loading,
     isAuthenticated,
     redirectToLogin,
@@ -185,6 +133,6 @@ export function useAuth() {
     logoutLoading,
     logoutError,
     clearLogoutError,
-    checkSession, // Expose checkSession for manual checks if needed
+    checkSession,
   }
 }

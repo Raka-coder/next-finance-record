@@ -1,16 +1,14 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { updatePasswordSchema } from '@/validation/schemas/update-password'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import {
-  Form,
-} from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { UpdatePasswordCard } from '../update-password-card'
 import { PasswordField } from './password-field'
 import { ConfirmPasswordField } from './confirm-password-field'
@@ -23,6 +21,8 @@ interface UpdatePasswordFormProps extends React.ComponentPropsWithoutRef<'div'> 
 
 export function UpdatePasswordForm({ className, onPasswordUpdateSuccess, ...props }: UpdatePasswordFormProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
 
   const form = useForm<z.infer<typeof updatePasswordSchema>>({
     resolver: zodResolver(updatePasswordSchema),
@@ -36,12 +36,16 @@ export function UpdatePasswordForm({ className, onPasswordUpdateSuccess, ...prop
 
   async function onSubmit(values: z.infer<typeof updatePasswordSchema>) {
     try {
-      const supabase = createClient()
-      const { error } = await supabase.auth.updateUser({
-        password: values.password,
+      if (!token) {
+        throw new Error('Token reset password tidak valid atau telah kedaluwarsa')
+      }
+
+      const { error } = await authClient.resetPassword({
+        newPassword: values.password,
+        token,
       })
 
-      if (error) throw error
+      if (error) throw new Error(error.message || 'Gagal mengubah kata sandi')
 
       toast.success('Password berhasil diubah!', {
         description: 'Anda dapat login dengan password baru Anda.',
@@ -53,11 +57,12 @@ export function UpdatePasswordForm({ className, onPasswordUpdateSuccess, ...prop
         router.push('/login')
       }
     } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Terjadi kesalahan saat mengubah password'
       form.setError('root', {
-        message: error instanceof Error ? error.message : 'An error occurred while updating password',
+        message: msg,
       })
       toast.error('Gagal mengubah password', {
-        description: 'Terjadi kesalahan saat mengubah password Anda.',
+        description: msg,
       })
     }
   }

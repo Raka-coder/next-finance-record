@@ -2,7 +2,7 @@
 
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/utils/supabase/client'
+import { authClient } from '@/lib/auth-client'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { forgotPasswordSchema } from '@/validation/schemas/forgot-password'
@@ -24,12 +24,12 @@ export function ForgotPasswordForm({ className, ...props }: ForgotPasswordFormPr
 
     try {
       const validatedEmail = forgotPasswordSchema.parse({ email })
-      const supabase = createClient()
-      const { error } = await supabase.auth.resetPasswordForEmail(validatedEmail.email, {
-        redirectTo: `${window.location.origin}/update-password`,
+      const { error } = await authClient.requestPasswordReset({
+        email: validatedEmail.email,
+        redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/update-password`,
       })
       
-      if (error) throw error
+      if (error) throw new Error(error.message || 'Gagal mengirim email reset password')
       
       toast.success('Email terkirim!', {
         description: 'Periksa email Anda untuk instruksi reset password.',
@@ -40,9 +40,10 @@ export function ForgotPasswordForm({ className, ...props }: ForgotPasswordFormPr
       if (error instanceof z.ZodError) {
         setError(error.issues[0].message)
       } else {
-        setError(error instanceof Error ? error.message : 'An error occurred')
+        const msg = error instanceof Error ? error.message : 'Terjadi kesalahan saat mengirim email'
+        setError(msg)
         toast.error('Gagal mengirim email', {
-          description: 'Terjadi kesalahan saat mengirim email reset password.',
+          description: msg,
         })
       }
     } finally {

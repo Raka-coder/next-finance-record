@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form } from "@/components/ui/form"
-import { createClient } from "@/utils/supabase/client"
+import { signUp } from "@/lib/auth-client"
 import { ProfileService } from "@/services/profile.service"
 import { registerFormSchema, type RegisterFormValues } from "@/validation/schemas/register"
 import { useState } from "react"
@@ -21,11 +21,9 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
-  const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
   const [usernameError, setUsernameError] = useState("")
   const router = useRouter()
-  const supabase = createClient()
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -58,44 +56,35 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setLoading(true)
-    setMessage("")
     const isUsernameValid = await validateUsername(data.username)
     if (!isUsernameValid) {
       setLoading(false)
       return
     }
 
-    const { data: signUpData, error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await signUp.email({
       email: data.email,
       password: data.password,
-      options: {
-        emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/confirm` : undefined,
-        data: {
-          username: data.username,
-          full_name: data.fullName,
-        },
-      },
+      name: data.fullName,
+      callbackURL: "/dashboard",
     })
 
     if (error) {
-      toast.error(error.message)
+      toast.error(error.message || "Gagal membuat akun")
     } else {
-      if (signUpData.user && signUpData.user.identities && signUpData.user.identities.length === 0) {
-        toast.error("Email ini sudah terdaftar. Silakan login atau reset password.")
-      } else if (signUpData.session) {
-        toast.success("Registrasi berhasil! Mengalihkan ke dashboard...")
-        if (onRegisterSuccess) {
-          onRegisterSuccess()
-        } else {
-          router.push("/dashboard")
+      if (signUpData?.user?.id) {
+        try {
+          await ProfileService.createProfile(signUpData.user.id, data.username, data.fullName)
+        } catch (e) {
+          console.error("Profile creation error:", e)
         }
+      }
+
+      toast.success("Registrasi berhasil! Mengalihkan ke dashboard...")
+      if (onRegisterSuccess) {
+        onRegisterSuccess()
       } else {
-        toast.message("Registrasi berhasil! Periksa email Anda untuk link konfirmasi.", {
-          description: "Jika tidak ada di Inbox, pastikan periksa folder Spam/Junk.",
-        })
-        if (onRegisterSuccess) {
-          onRegisterSuccess()
-        }
+        router.push("/dashboard")
       }
     }
     setLoading(false)
@@ -112,17 +101,6 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
           <SubmitButton loading={loading} usernameError={usernameError} />
         </form>
       </Form>
-      {message && (
-        <div
-          className={`mt-4 p-3 rounded-lg text-sm font-medium ${
-            message.includes("error") || message.includes("Error")
-              ? "bg-destructive/10 text-destructive border border-destructive/20"
-              : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
-          }`}
-        >
-          {message}
-        </div>
-      )}
       <LoginLink />
     </div>
   )

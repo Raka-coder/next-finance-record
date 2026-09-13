@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LoginForm } from "./login/login-form"
+import { GoogleButton } from "./google-button"
 import { useRouter } from "next/navigation"
 
 interface LoginCardProps {
@@ -31,7 +32,16 @@ export function LoginCard({ onLoginSuccess }: LoginCardProps) {
           Masukkan kredensial Anda untuk mengakses catatan keuangan.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="p-0 space-y-4">
+        <GoogleButton text="Masuk dengan Google" />
+
+        <div className="relative flex items-center justify-center my-2">
+          <div className="border-t border-border w-full" />
+          <span className="bg-card px-2 text-[10px] font-mono text-muted-foreground uppercase absolute">
+            atau
+          </span>
+        </div>
+
         <LoginForm onLoginSuccess={onLoginSuccess || handleLoginSuccess} />
       </CardContent>
     </Card>

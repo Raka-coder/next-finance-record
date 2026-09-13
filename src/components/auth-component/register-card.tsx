@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { RegisterForm } from "./register/register-form"
+import { GoogleButton } from "./google-button"
 import { useRouter } from "next/navigation"
 
 interface RegisterCardProps {
@@ -12,9 +13,7 @@ export function RegisterCard({ onRegisterSuccess }: RegisterCardProps) {
   const router = useRouter()
   
   const handleRegisterSuccess = () => {
-    setTimeout(() => {
-      router.push("/login")
-    }, 3000)
+    router.push("/dashboard")
   }
 
   return (
@@ -33,7 +32,16 @@ export function RegisterCard({ onRegisterSuccess }: RegisterCardProps) {
           Mulai kelola arus kas harian dengan buku besar minimalis.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="p-0 space-y-4">
+        <GoogleButton text="Daftar dengan Google" />
+
+        <div className="relative flex items-center justify-center my-2">
+          <div className="border-t border-border w-full" />
+          <span className="bg-card px-2 text-[10px] font-mono text-muted-foreground uppercase absolute">
+            atau
+          </span>
+        </div>
+
         <RegisterForm onRegisterSuccess={onRegisterSuccess || handleRegisterSuccess} />
       </CardContent>
     </Card>
