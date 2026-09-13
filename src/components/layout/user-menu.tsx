@@ -55,7 +55,6 @@ export function UserMenu({ profile, onProfileUpdate, onProfileCreate, userEmail 
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-  useAuth()
 
   const validateUsername = async (username: string, isCreate = false) => {
     if (username.length < 3) {

@@ -169,7 +169,7 @@ export class RecurringService {
       amount: Number(schedule.amount),
       type: schedule.type,
       category: schedule.category,
-      date: new Date().toISOString(),
+      date: new Date().toISOString().split("T")[0],
     })
 
     // 3. Hitung tanggal jatuh tempo berikutnya

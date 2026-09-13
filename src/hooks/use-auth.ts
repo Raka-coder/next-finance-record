@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useSession, signOut } from "@/lib/auth-client"
 import { createClient } from "@/utils/supabase/client"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { toast } from "sonner"
 
 export function useAuth() {
@@ -110,18 +110,18 @@ export function useAuth() {
     }
   }
 
-  const clearLogoutError = () => {
+  const clearLogoutError = useCallback(() => {
     setLogoutError(null)
-  }
+  }, [])
 
-  const checkSession = async () => {
+  const checkSession = useCallback(async () => {
     try {
       await refetch()
       return !!session?.user
     } catch {
       return false
     }
-  }
+  }, [refetch, session?.user])
 
   return {
     user: user as any,

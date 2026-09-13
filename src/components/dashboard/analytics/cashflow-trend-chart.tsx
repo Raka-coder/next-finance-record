@@ -50,7 +50,18 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
       },
       labels: {
         formatter: function () {
-          return "Rp " + (Number(this.value) / 1000000).toFixed(1) + "M"
+          const val = Number(this.value)
+          if (val === 0) return "Rp 0"
+          if (val >= 1_000_000_000) {
+            return "Rp " + (val / 1_000_000_000).toLocaleString("id-ID", { maximumFractionDigits: 1 }) + "M"
+          }
+          if (val >= 1_000_000) {
+            return "Rp " + (val / 1_000_000).toLocaleString("id-ID", { maximumFractionDigits: 1 }) + "jt"
+          }
+          if (val >= 1_000) {
+            return "Rp " + (val / 1_000).toLocaleString("id-ID", { maximumFractionDigits: 0 }) + "rb"
+          }
+          return "Rp " + val.toLocaleString("id-ID")
         },
         style: {
           color: isDark ? "#94A3B8" : "#64748B",
@@ -70,7 +81,7 @@ export function CashflowTrendChart({ data }: CashflowTrendChartProps) {
       formatter: function () {
         let s = `<b>${this.x}</b><br/>`
         this.points?.forEach((point) => {
-          const val = point.y ? point.y.toLocaleString("id-ID") : "0"
+          const val = typeof point.y === "number" ? point.y.toLocaleString("id-ID") : "0"
           s += `<span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>Rp ${val}</b><br/>`
         })
         return s

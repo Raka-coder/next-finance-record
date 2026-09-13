@@ -27,13 +27,13 @@ export function PieChartsSection({ incomePieData, expensePieData }: PieChartsSec
           {/* Income Pie Chart */}
           <div className="pt-2 lg:pt-0 lg:pr-4">
             <div className="text-xs font-mono font-medium text-foreground mb-2">Kas Masuk</div>
-            <PieChart title="" data={incomePieData} height={280} showLegend={true} />
+            <PieChart title="" data={incomePieData} height={280} showLegend={true} colorScheme="income" />
           </div>
 
           {/* Expense Pie Chart */}
           <div className="pt-6 lg:pt-0 lg:pl-4">
             <div className="text-xs font-mono font-medium text-foreground mb-2">Kas Keluar</div>
-            <PieChart title="" data={expensePieData} height={280} showLegend={true} />
+            <PieChart title="" data={expensePieData} height={280} showLegend={true} colorScheme="expense" />
           </div>
         </div>
       </CardContent>

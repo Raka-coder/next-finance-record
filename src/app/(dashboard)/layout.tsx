@@ -33,6 +33,16 @@ const menuItems = [
     href: "/dashboard/transaction-lists",
   },
   {
+    id: "recurring",
+    title: "Tagihan Berulang",
+    href: "/dashboard/recurring",
+  },
+  {
+    id: "budgets-goals",
+    title: "Anggaran & Target",
+    href: "/dashboard/budgets-goals",
+  },
+  {
     id: "settings",
     title: "Pengaturan",
     href: "/dashboard/settings",
@@ -44,7 +54,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, loading, isAuthenticated, redirectToLogin, checkSession } = useAuth()
+  const { user, loading, isAuthenticated, redirectToLogin } = useAuth()
   const pathname = usePathname()
 
   const { profile, updateProfile, createProfile } = useProfile(user?.id)
@@ -55,11 +65,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   }, [loading, isAuthenticated, user, redirectToLogin])
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      checkSession()
-    }
-  }, [isAuthenticated, user, pathname, checkSession])
+
 
   const getPageTitle = () => {
     const exactMatch = menuItems.find(item => item.href === pathname)

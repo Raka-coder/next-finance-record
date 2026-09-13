@@ -59,8 +59,9 @@ export class AnalyticsService {
     const prevMonth = prevDate.getMonth()
     const prevMonthKey = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}`
 
-    const startPrev = new Date(prevYear, prevMonth, 1).toISOString()
-    const endCur = new Date(curYear, curMonth + 1, 0, 23, 59, 59, 999).toISOString()
+    const startPrev = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}-01`
+    const lastDayOfMonth = new Date(curYear, curMonth + 1, 0).getDate()
+    const endCur = `${curYear}-${String(curMonth + 1).padStart(2, "0")}-${String(lastDayOfMonth).padStart(2, "0")}`
 
     const { data: transactions, error } = await supabase
       .from("transactions")
@@ -133,7 +134,7 @@ export class AnalyticsService {
 
     // 6 bulan ke belakang
     const startObj = new Date(now.getFullYear(), now.getMonth() - 5, 1)
-    const startDate = startObj.toISOString()
+    const startDate = `${startObj.getFullYear()}-${String(startObj.getMonth() + 1).padStart(2, "0")}-01`
 
     const { data: transactions, error } = await supabase
       .from("transactions")
@@ -184,8 +185,9 @@ export class AnalyticsService {
     const year = parseInt(yearStr, 10)
     const monthIndex = parseInt(monthStr, 10) - 1
 
-    const startDate = new Date(year, monthIndex, 1).toISOString()
-    const endDate = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999).toISOString()
+    const startDate = `${year}-${String(monthIndex + 1).padStart(2, "0")}-01`
+    const lastDay = new Date(year, monthIndex + 1, 0).getDate()
+    const endDate = `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`
 
     const { data: transactions, error } = await supabase
       .from("transactions")

@@ -13,6 +13,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import {
+  LayoutDashboard,
+  ReceiptText,
+  Repeat,
+  Target,
+  Settings,
+} from "lucide-react"
 
 const menuItems = [
   {
@@ -20,18 +27,35 @@ const menuItems = [
     title: "Ringkasan Keuangan",
     shortCode: "01",
     href: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
     id: "list",
     title: "Daftar Transaksi",
     shortCode: "02",
     href: "/dashboard/transaction-lists",
+    icon: ReceiptText,
+  },
+  {
+    id: "recurring",
+    title: "Tagihan Berulang",
+    shortCode: "03",
+    href: "/dashboard/recurring",
+    icon: Repeat,
+  },
+  {
+    id: "budgets-goals",
+    title: "Anggaran & Target",
+    shortCode: "04",
+    href: "/dashboard/budgets-goals",
+    icon: Target,
   },
   {
     id: "settings",
     title: "Pengaturan",
-    shortCode: "03",
+    shortCode: "05",
     href: "/dashboard/settings",
+    icon: Settings,
   },
 ]
 
@@ -53,15 +77,16 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
+              tooltip="FinanceRecord"
               className="hover:bg-sidebar-accent cursor-pointer"
               onClick={() => router.push("/dashboard")}
             >
-              <div className="size-6 rounded-[3px] bg-primary text-primary-foreground flex items-center justify-center font-mono text-[11px] font-bold">
+              <div className="size-6 shrink-0 rounded-[3px] bg-primary text-primary-foreground flex items-center justify-center font-mono text-[11px] font-bold">
                 FR
               </div>
-              <div className="flex flex-col gap-0.5 leading-none">
-                <span className="font-semibold text-xs tracking-tight">FinanceRecord</span>
-                <span className="text-[10px] font-mono text-muted-foreground">v1.0 &middot; Buku Kas</span>
+              <div className="flex flex-col gap-0.5 leading-none min-w-0 group-data-[collapsible=icon]:hidden">
+                <span className="font-semibold text-xs tracking-tight truncate">FinanceRecord</span>
+                <span className="text-[10px] font-mono text-muted-foreground truncate">v1.0 &middot; Buku Kas</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -75,20 +100,22 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    className="cursor-pointer rounded-[4px] text-xs h-8 font-normal data-[active=true]:font-medium data-[active=true]:bg-sidebar-accent"
-                    isActive={isActive(item.href)}
-                    onClick={() => router.push(item.href)}
-                  >
-                    <span className="font-mono text-[10px] text-muted-foreground mr-1.5 w-4">
-                      {item.shortCode}
-                    </span>
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {menuItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="cursor-pointer rounded-[4px] text-xs h-8 font-normal data-[active=true]:font-medium data-[active=true]:bg-sidebar-accent"
+                      isActive={isActive(item.href)}
+                      onClick={() => router.push(item.href)}
+                    >
+                      <Icon className="size-4 shrink-0 text-muted-foreground group-data-[active=true]/menu-item:text-foreground" />
+                      <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

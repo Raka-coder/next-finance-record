@@ -63,36 +63,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   }
 
   return (
-    <div className="relative min-h-[100dvh] w-full flex flex-col justify-between bg-background text-foreground selection:bg-foreground selection:text-background">
-      {/* Editorial Top Utility Bar with clean 1px border */}
-      <header className="border-b border-border bg-background/80 backdrop-blur-xs">
-        <div className="flex h-13 items-center justify-between px-6 max-w-5xl w-full mx-auto">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 text-foreground hover:opacity-75 transition-opacity"
-          >
-            <div className="size-6 rounded-[3px] bg-primary text-primary-foreground flex items-center justify-center font-mono text-[11px] font-bold">
-              FR
-            </div>
-            <span className="font-medium text-xs tracking-tight text-foreground">
-              FinanceRecord
-            </span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+    <div className="relative min-h-[100dvh] w-full flex items-center justify-center bg-background text-foreground selection:bg-foreground selection:text-background px-4 py-8">
+      {/* Floating Theme Toggle in top right */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <ThemeToggle />
+      </div>
 
-      {/* Main Content Area with generous macro-whitespace */}
-      <main className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
+      {/* Main Content Area */}
+      <main className="w-full max-w-md">
         {children}
       </main>
-
-      {/* Editorial Footer */}
-      <footer className="border-t border-border py-4 px-6 text-center text-[11px] font-mono text-muted-foreground">
-        FinanceRecord &middot; Minimalist Financial Ledger
-      </footer>
     </div>
   )
 }

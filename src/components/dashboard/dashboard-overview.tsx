@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { FinancialSummary } from "@/components/dashboard/financial-summary"
 import { RecurringDueBanner } from "@/components/dashboard/recurring/recurring-due-banner"
+import { RecurringSummaryCard } from "@/components/dashboard/recurring/recurring-summary-card"
 import Loading from "@/components/loading/loading-component"
 import { useTransactions } from "@/hooks/use-transaction"
 import { AnalyticsService } from "@/services/analytics.service"
@@ -56,6 +57,7 @@ export function DashboardOverview() {
         momData={momData}
         sixMonthTrend={sixMonthTrend}
       />
+      <RecurringSummaryCard onTransactionExecuted={handleTransactionExecuted} />
     </div>
   )
 }

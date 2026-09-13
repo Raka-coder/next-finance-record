@@ -16,26 +16,58 @@ interface PieChartProps {
   data: PieChartData[]
   height?: number
   showLegend?: boolean
+  colorScheme?: "default" | "income" | "expense"
 }
 
-export function PieChart({ title, data, height = 280, showLegend = true }: PieChartProps) {
+export function PieChart({
+  title,
+  data,
+  height = 280,
+  showLegend = true,
+  colorScheme = "default",
+}: PieChartProps) {
   const { theme } = useTheme()
   const chartRef = useRef<HighchartsReact.RefObject>(null)
 
-  // Muted pastels palette inspired by Linear/Notion
-  const palette = [
-    "#346538", // Forest Muted Green
-    "#1F6C9F", // Slate Blue
-    "#956400", // Muted Amber
-    "#6B5B95", // Muted Violet
-    "#9F2F2D", // Muted Brick
-    "#5A6B7C", // Muted Steel
-    "#787774", // Neutral Gray
-  ]
+  // Tailored palettes for financial context
+  const palettes = {
+    // Green/Teal/Emerald gradients for Kas Masuk
+    income: [
+      "#2D6A4F", // Deep Emerald
+      "#40916C", // Forest Green
+      "#52B788", // Mint Emerald
+      "#1B4332", // Dark Pine
+      "#74C69D", // Sage Green
+      "#95D5B2", // Soft Mint
+      "#31572C", // Olive Green
+    ],
+    // Warm Red/Coral/Brick/Amber shades for Kas Keluar
+    expense: [
+      "#9F2F2D", // Crimson Brick
+      "#C84B31", // Terracotta
+      "#D97706", // Warm Amber
+      "#800020", // Deep Burgundy
+      "#E06D53", // Coral Red
+      "#B45309", // Burnt Orange
+      "#991B1B", // Ruby Red
+    ],
+    // Balanced utilitarian palette
+    default: [
+      "#346538", // Forest Muted Green
+      "#1F6C9F", // Slate Blue
+      "#956400", // Muted Amber
+      "#6B5B95", // Muted Violet
+      "#9F2F2D", // Muted Brick
+      "#5A6B7C", // Muted Steel
+      "#787774", // Neutral Gray
+    ],
+  }
+
+  const activePalette = palettes[colorScheme] || palettes.default
 
   const dataWithColors = data.map((item, idx) => ({
     ...item,
-    color: item.color || palette[idx % palette.length],
+    color: item.color || activePalette[idx % activePalette.length],
   }))
 
   const totalAmount = data.reduce((sum, item) => sum + item.y, 0)
