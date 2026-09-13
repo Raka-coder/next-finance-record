@@ -1,1 +1,1 @@
-Lakukan update fitur, refactor dan migrasi fitur autentikasi pada proyek ini dan mengganbungkan supabase authentication dengan google authentication untuk mengautentikasi pengguna dengan akun Google (login/register).
+lakukan planning pengembangan fitur pada proyek ini khususnya pada fitur pengaturan/setting
