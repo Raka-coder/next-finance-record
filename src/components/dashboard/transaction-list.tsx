@@ -13,15 +13,13 @@ import { TransactionTable } from "./transaction-list/transaction-table"
 import { EditTransactionDialog } from "./transaction-list/edit-transaction-dialog"
 import { TransactionPagination } from "./transaction-list/transaction-pagination"
 import type { EditTransactionFormValues } from "@/validation/schemas/edit-transaction"
+import { useCategories } from "@/hooks/use-categories"
 
 interface TransactionListProps {
   transactions: Transaction[]
   onUpdateTransaction: (id: string, transaction: Omit<Transaction, "id">) => void
   onDeleteTransaction: (id: string) => void
 }
-
-const incomeCategories = ["Gaji", "Freelance", "Investasi", "Bonus", "Lainnya"]
-const expenseCategories = ["Makanan", "Transportasi", "Belanja", "Tagihan", "Hiburan", "Kesehatan", "Lainnya"]
 
 interface WeekGroup {
   weekStart: Date
@@ -36,6 +34,7 @@ export function TransactionList({
   onUpdateTransaction,
   onDeleteTransaction,
 }: TransactionListProps) {
+  const { incomeCategories, expenseCategories } = useCategories()
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)

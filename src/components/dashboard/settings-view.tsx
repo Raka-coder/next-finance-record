@@ -7,7 +7,7 @@ import Loading from "@/components/loading/loading-component"
 
 export function SettingsView() {
   const { user, loading } = useAuth()
-  const { profile } = useProfile(user?.id)
+  const { profile, refetch } = useProfile(user?.id)
 
   if (loading) {
     return <Loading />
@@ -21,5 +21,5 @@ export function SettingsView() {
     )
   }
 
-  return <Settings user={user} profile={profile} />
+  return <Settings user={user} profile={profile} onProfileUpdate={refetch} />
 }

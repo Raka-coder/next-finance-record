@@ -1,15 +1,37 @@
 import { createClient } from "@/utils/supabase/client"
 import type { Profile, ProfileUpdateInput } from "@/interfaces/profile-interface"
 
+const isUUID = (str?: string): boolean =>
+  !!str && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
+
 export class ProfileService {
   private static getClient() {
     return createClient()
   }
 
-  static async getProfile(userId: string): Promise<Profile | null> {
+  private static async resolveUUID(userId?: string): Promise<string | null> {
+    if (isUUID(userId)) return userId!
     try {
       const supabase = this.getClient()
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single()
+      const { data } = await supabase.auth.getUser()
+      if (data?.user?.id && isUUID(data.user.id)) {
+        return data.user.id
+      }
+    } catch {
+      // Ignored
+    }
+    return null
+  }
+
+  static async getProfile(userId: string): Promise<Profile | null> {
+    try {
+      const resolvedId = await this.resolveUUID(userId)
+      if (!resolvedId) {
+        return null
+      }
+
+      const supabase = this.getClient()
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", resolvedId).single()
 
       if (error) {
         if (error.code === "PGRST116") {
@@ -28,11 +50,16 @@ export class ProfileService {
 
   static async createProfile(userId: string, username: string, fullName?: string): Promise<Profile | null> {
     try {
+      const resolvedId = await this.resolveUUID(userId)
+      if (!resolvedId) {
+        throw new Error("Invalid UUID for profile creation")
+      }
+
       const supabase = this.getClient()
       const { data, error } = await supabase
         .from("profiles")
         .insert({
-          id: userId,
+          id: resolvedId,
           username: username,
           full_name: fullName || "",
         })
@@ -53,8 +80,13 @@ export class ProfileService {
 
   static async updateProfile(userId: string, updates: ProfileUpdateInput): Promise<Profile | null> {
     try {
+      const resolvedId = await this.resolveUUID(userId)
+      if (!resolvedId) {
+        throw new Error("Invalid UUID for profile update")
+      }
+
       const supabase = this.getClient()
-      const { data, error } = await supabase.from("profiles").update(updates).eq("id", userId).select().single()
+      const { data, error } = await supabase.from("profiles").update(updates).eq("id", resolvedId).select().single()
 
       if (error) {
         console.error("Error updating profile:", error)
@@ -73,8 +105,9 @@ export class ProfileService {
       const supabase = this.getClient()
       let query = supabase.from("profiles").select("username").eq("username", username)
 
-      if (excludeUserId) {
-        query = query.neq("id", excludeUserId)
+      const resolvedExcludeId = await this.resolveUUID(excludeUserId)
+      if (resolvedExcludeId) {
+        query = query.neq("id", resolvedExcludeId)
       }
 
       const { data, error } = await query

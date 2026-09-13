@@ -16,7 +16,7 @@ import { TransactionTypeField } from "./transaction/transaction-type-field"
 import { TransactionAmountDateFields } from "./transaction/transaction-amount-date-fields"
 import { TransactionCategoryField } from "./transaction/transaction-category-field"
 import { TransactionDescriptionField } from "./transaction/transaction-description-field"
-import { incomeCategories, expenseCategories } from "./transaction/transaction-categories"
+import { useCategories } from "@/hooks/use-categories"
 
 interface AddTransactionProps {
   onAddTransaction: (
@@ -25,6 +25,7 @@ interface AddTransactionProps {
 }
 
 export function AddTransaction({ onAddTransaction }: AddTransactionProps) {
+  const { incomeCategories, expenseCategories } = useCategories()
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {

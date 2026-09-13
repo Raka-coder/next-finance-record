@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { RecurringService } from "@/services/recurring.service"
-import { incomeCategories, expenseCategories } from "@/components/dashboard/transaction/transaction-categories"
+import { useCategories } from "@/hooks/use-categories"
 import { toast } from "sonner"
 import type { RecurringSchedule, RecurringScheduleInput, RecurringFrequency } from "@/interfaces/recurring-interface"
 
@@ -25,6 +25,7 @@ export function RecurringFormDialog({
   existingSchedule,
   onSuccess,
 }: RecurringFormDialogProps) {
+  const { incomeCategories, expenseCategories } = useCategories()
   const [description, setDescription] = useState(existingSchedule?.description || "")
   const [amount, setAmount] = useState(existingSchedule ? String(existingSchedule.amount) : "")
   const [type, setType] = useState<"income" | "expense">(existingSchedule?.type || "expense")

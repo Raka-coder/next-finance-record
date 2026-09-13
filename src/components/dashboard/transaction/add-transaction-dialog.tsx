@@ -23,7 +23,7 @@ import { TransactionTypeField } from "./transaction-type-field"
 import { TransactionAmountDateFields } from "./transaction-amount-date-fields"
 import { TransactionCategoryField } from "./transaction-category-field"
 import { TransactionDescriptionField } from "./transaction-description-field"
-import { incomeCategories, expenseCategories } from "./transaction-categories"
+import { useCategories } from "@/hooks/use-categories"
 
 interface AddTransactionDialogProps {
   onAddTransaction: (
@@ -44,6 +44,8 @@ export function AddTransactionDialog({
   const isControlled = externalOpen !== undefined
   const open = isControlled ? externalOpen : internalOpen
   const setOpen = isControlled ? (externalOnOpenChange ?? (() => {})) : setInternalOpen
+
+  const { incomeCategories, expenseCategories } = useCategories()
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),

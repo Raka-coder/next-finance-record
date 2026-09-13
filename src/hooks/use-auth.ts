@@ -11,6 +11,7 @@ export function useAuth() {
   const { data: session, isPending, refetch } = useSession()
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [logoutError, setLogoutError] = useState<string | null>(null)
+  const [supabaseUserId, setSupabaseUserId] = useState<string | null>(null)
   const syncedUserId = useRef<string | null>(null)
 
   // Sync session to Supabase client so RLS (auth.uid() = user_id) works flawlessly
@@ -20,9 +21,12 @@ export function useAuth() {
         try {
           const supabase = createClient()
           const current = await supabase.auth.getUser()
-          if (current.data?.user?.id === session.user.id) {
-            syncedUserId.current = session.user.id
-            return
+          if (current.data?.user?.id) {
+            setSupabaseUserId(current.data.user.id)
+            if (current.data.user.id === session.user.id) {
+              syncedUserId.current = session.user.id
+              return
+            }
           }
 
           const res = await fetch("/api/auth/supabase-token")
@@ -33,6 +37,10 @@ export function useAuth() {
               token_hash: data.token_hash,
               type: "email",
             })
+            const updated = await supabase.auth.getUser()
+            if (updated.data?.user?.id) {
+              setSupabaseUserId(updated.data.user.id)
+            }
             syncedUserId.current = session.user.id
           }
         } catch (e) {
@@ -46,6 +54,9 @@ export function useAuth() {
   const user = session?.user
     ? {
         ...session.user,
+        id: supabaseUserId || session.user.id,
+        betterAuthId: session.user.id,
+        supabaseId: supabaseUserId,
         user_metadata: {
           full_name: session.user.name,
           avatar_url: session.user.image,
